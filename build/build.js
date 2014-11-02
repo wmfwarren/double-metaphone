@@ -52,7 +52,7 @@ require.define = function (name, exports) {
     exports: exports
   };
 };
-require.register("wooorm~double-metaphone@0.1.1", function (exports, module) {
+require.register("wooorm~double-metaphone@0.1.2", function (exports, module) {
 'use strict';
 
 var VOWELS,
@@ -1470,7 +1470,7 @@ module.exports = doubleMetaphone;
 });
 
 require.register("double-metaphone-gh-pages", function (exports, module) {
-var metaphone = require("wooorm~double-metaphone@0.1.1");
+var metaphone = require('wooorm~double-metaphone@0.1.2');
 var inputElement = document.getElementsByTagName('input')[0];
 var outputElement = document.getElementsByTagName('output')[0];
 
@@ -1491,4 +1491,4 @@ getPhonetics();
 
 });
 
-require("double-metaphone-gh-pages")
+require("double-metaphone-gh-pages");
