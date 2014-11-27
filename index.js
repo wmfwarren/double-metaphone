@@ -1,18 +1,42 @@
-var metaphone = require('double-metaphone');
-var inputElement = document.getElementsByTagName('input')[0];
-var outputElement = document.getElementsByTagName('output')[0];
+'use strict';
 
-function getPhonetics() {
-    var value = metaphone(inputElement.value);
+/**
+ * Dependencies.
+ */
+
+var doubleMetaphone = require('wooorm/double-metaphone@0.1.3');
+
+/**
+ * DOM elements.
+ */
+
+var $input = document.getElementsByTagName('input')[0];
+var $output = document.getElementsByTagName('output')[0];
+
+/**
+ * Event handlers.
+ */
+
+function oninputchange() {
+    var value = doubleMetaphone($input.value);
 
     if (value[0].length === 0 && value[1].length === 0) {
-        outputElement.textContent = '';
-        return
+        $output.textContent = '';
+
+        return;
     }
 
-    outputElement.textContent = '["' + value[0] + '", "' + value[1] + '"]';
+    $output.textContent = '["' + value[0] + '", "' + value[1] + '"]';
 }
 
-inputElement.addEventListener('input', getPhonetics);
+/**
+ * Listen.
+ */
 
-getPhonetics();
+$input.addEventListener('input', oninputchange);
+
+/**
+ * Initial answer.
+ */
+
+oninputchange();
