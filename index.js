@@ -4,7 +4,7 @@
  * Dependencies.
  */
 
-var doubleMetaphone = require('wooorm/double-metaphone@0.1.3');
+var doubleMetaphone = require('wooorm/double-metaphone@0.1.4');
 
 /**
  * DOM elements.
