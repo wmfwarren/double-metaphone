@@ -20,7 +20,7 @@ var VOWELS,
  * Match vowels (including `Y`).
  */
 
-VOWELS = /[AEIOUY]/;
+VOWELS = /[AEIOUY01]/;
 
 /*
  * Match few Slavo-Germanic values.
@@ -153,6 +153,8 @@ function doubleMetaphone(value) {
 
         index++;
     }
+    // Soft /AOU/ adds a  0 to the string
+    // Soft /IE/ adds a  1 to the string
 
     while (index < length) {
         prev = characters[index - 1];
@@ -161,27 +163,196 @@ function doubleMetaphone(value) {
 
         switch (characters[index]) {
             case 'A':
-            case 'E':
-            case 'I':
-            case 'O':
-            case 'U':
-            case 'Y':
-            case 'À':
-            case 'Ê':
-            case 'É':
-            case 'É':
-                if (index === 0) {
-                    /*
-                     * All initial vowels now map to `A`.
-                     */
-
-                    primary += 'A';
-                    secondary += 'A';
-                }
-
+              if (next === 'A') {
+                primary += '0';
+                secondary += '0';
+                index += 2;
+              } else if (next === 'O') {
+                primary += '0';
+                secondary += '0';
+                index += 2;
+              } else if (next === 'E') {
+                primary += 'A';
+                secondary += 'A';
+                index += 2;
+              } else if (next === 'I') {
+                primary += 'A';
+                secondary += 'A';
+                index += 2;
+              }  else if (next === 'U') {
+                primary += "0W";
+                secondary += "0W";
+                index += 2;
+              } else if (next === 'Y') {
+                primary += "A";
+                secondary += "A";
+                index += 2;
+              }  else {
+                primary += '0';
+                secondary += '0';
                 index++;
-
-                break;
+              }
+              break;
+            case 'E':
+              if (next === 'A') {
+                primary += 'E';
+                secondary += 'E';
+                index += 2;
+              } else if (next === 'E') {
+                primary += 'E';
+                secondary += 'E';
+                index += 2;
+              } else if (next === 'I') {
+                primary += 'E';
+                secondary += 'E';
+                index += 2;
+              }  else if (next === 'O') {
+                primary += "EO";
+                secondary += "EO";
+                index += 2;
+              }  else if (index === 0 && next === 'U') {
+                primary += "U";
+                secondary += "U";
+                index += 2;
+              }  else if(next === 'U') {
+                primary += "0";
+                secondary += "0";
+                index += 2;
+              } else if (next === 'Y') {
+                primary += "E";
+                secondary += "E";
+                index += 2;
+              } else {
+                primary += '1';
+                secondary += '1';
+                index++;
+              }
+              break;
+            case 'I':
+              if (next === 'A') {
+                primary += 'I0';
+                secondary += 'I0';
+                index += 2;
+              } else if (next === 'E') {
+                primary += 'I';
+                secondary += 'I';
+                index += 2;
+              } else if (next === 'I') {
+                primary += 'I';
+                secondary += 'I';
+                index += 2;
+              }  else if (next === 'O') {
+                primary += "0";
+                secondary += "0";
+                index += 2;
+              } else if ( next === 'U' && /[SM]/.test(nextnext)) {
+                primary += "E0";
+                secondary += "E0";
+                index += 2;
+              } else if ( /[JL]/.test(prev) && next === 'U') {
+                primary += '0';
+                secondary += '0';
+                index += 2;
+              } else if ( next === 'Y') {
+                primary += 'IY';
+                secondary += 'IY';
+                index += 2;
+              } else {
+                primary += '1';
+                secondary += '1';
+                index++;
+              }
+              break;
+            case 'O':
+              if (next === 'A') {
+                primary += 'O';
+                secondary += 'O';
+                index += 2;
+              } else if (next === 'E') {
+                primary += 'O';
+                secondary += 'O';
+                index += 2;
+              } else if (next === 'I') {
+                primary += 'OE';
+                secondary += 'OE';
+                index += 2;
+              }  else if (next === 'O') {
+                primary += "0";
+                secondary += "0";
+                index += 2;
+              } else if (next === 'U') {
+                primary += "0";
+                secondary += "0";
+                index += 2;
+              } else if (next === 'Y') {
+                primary += "OY";
+                secondary += "OY";
+                index += 2;
+              } else {
+                primary += "0";
+                secondary += "0";
+                index++;
+              }
+              break;
+            case 'U':
+              if (next === 'A') {
+                primary += '0';
+                secondary += '0';
+                index += 2;
+              } else if (prev === 'Q' && next === 'E' && nextnext === undefined) {
+                primary += '';
+                secondary += '';
+                index += 2;
+              } else if (prev === 'Q' && next === 'E' && nextnext !== undefined) {
+                primary += 'W';
+                secondary += 'W';
+                index += 2;
+              } else if (next === 'E') {
+                primary += 'U';
+                secondary += 'U';
+                index += 2;
+              } else if (next === 'I') {
+                primary += '0';
+                secondary += '0';
+                index += 2;
+              }  else if (next === 'O') {
+                primary += "0";
+                secondary += "0";
+                index += 2;
+              }  else if (next === 'Y') {
+                primary += "I";
+                secondary += "I";
+                index += 2;
+              } else {
+                primary += "0";
+                secondary += "0";
+                index++;
+              }
+              break;
+            case 'Y':
+              if (next === 'A') {
+                primary += '10';
+                secondary += '10';
+                index += 2;
+              } else if (next === 'E') {
+                primary += '1E';
+                secondary += '1E';
+                index += 2;
+              } else if (next === 'I') {
+                primary += '11';
+                secondary += '11';
+                index += 2;
+              } else if (next === 'O') {
+                primary += "O";
+                secondary += "O";
+                index += 2;
+              } else {
+                primary += "1";
+                secondary += "1";
+                index++;
+              }
+              break;
+        //consonants
             case 'B':
                 primary += 'P';
                 secondary += 'P';
@@ -204,7 +375,7 @@ function doubleMetaphone(value) {
                  * Various Germanic:
                  */
 
-                if (prev === 'A' && next === 'H' && nextnext !== 'I' &&
+                if (/[A0]/.test(prev) && next === 'H' && !/[I1]/.test(nextnext) &&
                     !VOWELS.test(characters[index - 2]) &&
                     (
                         nextnext !== 'E' || (

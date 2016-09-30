@@ -42,5 +42,8 @@
     "make": "npm run lint && npm run coverage",
     "install-benchmark": "npm install natural doublemetaphone",
     "benchmark": "matcha benchmark.js"
+  },
+  "dependencies": {
+    "chai": "^3.5.0"
   }
 }
