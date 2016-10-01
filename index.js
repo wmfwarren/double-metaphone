@@ -372,18 +372,12 @@ function doubleMetaphone(value) {
                 index++;
 
                 break;
-            case 'Ç':
-                primary += 'S';
-                secondary += 'S';
-                index++;
-
-                break;
             case 'C':
                 /*
                  * Various Germanic:
                  */
 
-                if (/[A0]/.test(prev) && next === 'H' && !/[I1]/.test(nextnext) &&
+                if (/[0]/.test(prev) && next === 'H' && !/[1]/.test(nextnext) &&
                     !VOWELS.test(characters[index - 2]) &&
                     (
                         nextnext !== 'E' || (
@@ -1581,7 +1575,7 @@ function doubleMetaphone(value) {
         }
     }
 
-    return [primary, secondary];
+    return primary;
 }
 
 /*
