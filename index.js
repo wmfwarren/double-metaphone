@@ -403,7 +403,7 @@ function doubleMetaphone(value) {
                 ) {
                     primary += 'S';
                     secondary += 'S';
-                    index += 2;
+                    index++;
 
                     break;
                 }

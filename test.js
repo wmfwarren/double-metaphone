@@ -98,7 +98,7 @@ describe('doubleMetaphone(value) for Vowels', () => {
   // I Transforms
   describe("I vowel transforms", () => {
     it("should tansform IA's into I0", () => {
-      assert.deepEqual(doubleMetaphone("TIA"), "TI0"); /////////Needs a check
+      assert.deepEqual(doubleMetaphone("TIA"), "X"); 
       assert.deepEqual(doubleMetaphone("IA"), 'I0');
       assert.deepEqual(doubleMetaphone("IAT"), "I0T");
     });
@@ -292,7 +292,7 @@ describe("doubleMetaphone(value) for consonants", () => {
     }); //end Germanic
     describe("Special case for Gaius Julius Caesar", () => {
       it("should account for special case of the emeperor", () => {
-        assert.deepEqual(doubleMetaphone("CAESAR"), "SES0R");
+        assert.deepEqual(doubleMetaphone("CAESAR"), "SAS0R");
       });
     }); //end ceasar specail case
   });
