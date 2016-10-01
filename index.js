@@ -300,12 +300,12 @@ function doubleMetaphone(value) {
                 secondary += '0';
                 index += 2;
               } else if (prev === 'Q' && next === 'E' && nextnext === undefined) {
-                primary += '';
-                secondary += '';
+                primary += 'U';
+                secondary += 'U';
                 index += 2;
               } else if (prev === 'Q' && next === 'E' && nextnext !== undefined) {
-                primary += 'W';
-                secondary += 'W';
+                primary += '';
+                secondary += '';
                 index += 2;
               } else if (next === 'E') {
                 primary += 'U';
@@ -318,6 +318,10 @@ function doubleMetaphone(value) {
               }  else if (next === 'O') {
                 primary += "0";
                 secondary += "0";
+                index += 2;
+              } else if (next === 'U') {
+                primary += "U";
+                secondary += "U";
                 index += 2;
               }  else if (next === 'Y') {
                 primary += "I";
@@ -343,8 +347,12 @@ function doubleMetaphone(value) {
                 secondary += '11';
                 index += 2;
               } else if (next === 'O') {
-                primary += "O";
-                secondary += "O";
+                primary += "1O";
+                secondary += "1O";
+                index += 2;
+              } else if (next === 'U') {
+                primary += "U";
+                secondary += "U";
                 index += 2;
               } else {
                 primary += "1";
