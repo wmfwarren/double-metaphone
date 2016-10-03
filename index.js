@@ -32,7 +32,8 @@ SLAVO_GERMANIC = /W|K|CZ|WITZ/;
  * Match few Germanic values.
  */
 
-GERMANIC = /^(VAN |VON |SCH)/;
+// GERMANIC = /^(VAN |VON |SCH)/;
+GERMANIC = /^SCH/;
 
 /*
  * Match initial values of which the first character
@@ -127,7 +128,7 @@ function doubleMetaphone(value) {
         index = 0,
         length = value.length,
         last = length - 1,
-        isSlavoGermanic, isGermanic, subvalue, next, prev, nextnext,
+        isSlavoGermanic, isGermanic, subvalue, next, prev, nextnext, prevprev,
         characters;
 
     value = String(value).toUpperCase() + '     ';
@@ -157,6 +158,7 @@ function doubleMetaphone(value) {
     // Soft /IE/ adds a  1 to the string
 
     while (index < length) {
+        prevprev = characters[index - 2];
         prev = characters[index - 1];
         next = characters[index + 1];
         nextnext = characters[index + 2];
@@ -229,7 +231,11 @@ function doubleMetaphone(value) {
               }
               break;
             case 'I':
-              if (next === 'A') {
+              if (prevprev === "C" && prev === "H" && next === "A") {
+                primary += 'I';
+                secondary += 'I';
+                index += 2;
+              } else if (next === 'A') {
                 primary += 'I0';
                 secondary += 'I0';
                 index += 2;
@@ -257,6 +263,14 @@ function doubleMetaphone(value) {
                 primary += 'IY';
                 secondary += 'IY';
                 index += 2;
+              } else if ( next === 'C' && nextnext === "H") {
+                primary += 'IK';
+                secondary += 'IK';
+                index += 3;
+              } else if ( index === (length - 1 ) ) {
+                primary += 'E';
+                secondary += 'E';
+                index++;
               } else {
                 primary += '1';
                 secondary += '1';
@@ -334,7 +348,11 @@ function doubleMetaphone(value) {
               }
               break;
             case 'Y':
-              if (next === 'A') {
+              if (index === length -1 ){
+                primary += 'E';
+                secondary += 'E';
+                index += 2;
+              } else if (next === 'A') {
                 primary += '10';
                 secondary += '10';
                 index += 2;
