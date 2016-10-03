@@ -226,11 +226,11 @@ describe('doubleMetaphone(value) for Vowels', () => {
     });
     // Q transformes
     it.skip("should tansform --QUE's into KWU", () => {
-      assert.equal(doubleMetaphone("TQUE"), "TKWU"); //// need to fix
-      assert.equal(doubleMetaphone("QUE"), 'KWU');
+      assert.equal(doubleMetaphone("TQUE"), "TKU"); //// need to fix
+      assert.equal(doubleMetaphone("QUE"), 'KU');
     });
     it.skip("should tansform QUE--'s into KW", () => {
-      assert.equal(doubleMetaphone("TQUET"), "TKWT"); //// need to fix
+      assert.equal(doubleMetaphone("TQUET"), "TKT"); //// need to fix
     });
   });
   // Y vowel Transforms
@@ -359,11 +359,39 @@ describe("doubleMetaphone(value) for consonants", () => {
         assert.equal(doubleMetaphone("MCCAT"), "MKK0T");
       });
       it("should make other itatian CCs into an X", () => {
-        assert.equal(doubleMetaphone("TCCIT"), "TXT");
+        assert.equal(doubleMetaphone("TCCIT"), "TX1T");
         assert.equal(doubleMetaphone("TCCHT"), "TXT");
-        assert.equal(doubleMetaphone("TCCET"), "TXT");
+        assert.equal(doubleMetaphone("TCCET"), "TX1T");
         assert.equal(doubleMetaphone("TCCHUT"), "TK0T");
       });
     });
+    describe("change non italian CC's to SK", () => {
+      it("should change SUCCT into S0SKT etc", () => {
+        assert.equal(doubleMetaphone("ACCOUNT"), "0K0NT");
+        assert.equal(doubleMetaphone("ACCIT"), "0KS1T");
+        assert.equal(doubleMetaphone("SUCCT"), "S0KT");
+        assert.equal(doubleMetaphone("SUCCES"), "S0KS1S");
+        assert.equal(doubleMetaphone("SUCCEED"), "S0KSET");
+      });
+    });
+    describe("Italian CCI", () => {
+      it("should change --CCI to ---XI", () => {
+        assert.equal(doubleMetaphone("CCI"), "XE");
+      });
+    });
+    describe("Common Consonant pairs starting with C", () => {
+      it("should make CG into K", () => {
+        assert.equal(doubleMetaphone("CGI"), "KE")
+      });
+      it("should make CK into K", () => {
+        assert.equal(doubleMetaphone("CKI"), "KE")
+      });
+      it("should make CQ into K", () => {
+        assert.equal(doubleMetaphone("CQI"), "KE")
+      });
+    });
   }); //C transforms
+  describe("D Transforms", () => {
+    
+  });
 });// Main describe block

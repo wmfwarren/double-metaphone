@@ -267,7 +267,7 @@ function doubleMetaphone(value) {
                 primary += 'IK';
                 secondary += 'IK';
                 index += 3;
-              } else if ( index === (length - 1 ) ) {
+              } else if ( (index === (length - 1 )) && !VOWELS.test(next) ) {
                 primary += 'E';
                 secondary += 'E';
                 index++;
@@ -584,7 +584,7 @@ function doubleMetaphone(value) {
                             secondary += 'X';
                         }
 
-                        index += 3;
+                        index += 2;
 
                         break;
                     } else {
@@ -612,28 +612,28 @@ function doubleMetaphone(value) {
                  * Italian.
                  */
 
-                if (
-                    next === 'I' &&
-                    /*
-                     * Bug: The original algorithm also calls for A (as
-                     * in CIA), which is already taken care of above.
-                     */
-                    (nextnext === 'E' || nextnext === 'O')
-                ) {
-                    primary += 'S';
-                    secondary += 'X';
-                    index += 2;
+                // if (
+                //     next === 'I' &&
+                //     /*
+                //      * Bug: The original algorithm also calls for A (as
+                //      * in CIA), which is already taken care of above.
+                //      */
+                //     (nextnext === 'E' || nextnext === 'O')
+                // ) {
+                //     primary += 'S';
+                //     secondary += 'X';
+                //     index += 2;
+                //
+                //     break;
+                // }
 
-                    break;
-                }
-
-                if (next === 'I' || next === 'E' || next === 'Y') {
-                    primary += 'S';
-                    secondary += 'S';
-                    index += 2;
-
-                    break;
-                }
+                // if (next === 'I' || next === 'E' || next === 'Y') {
+                //     primary += 'S';
+                //     secondary += 'S';
+                //     index += 2;
+                //
+                //     break;
+                // }
 
                 primary += 'K';
                 secondary += 'K';
@@ -643,17 +643,17 @@ function doubleMetaphone(value) {
                  * `Mac Gregor`.
                  */
 
-                if (
-                    next === ' ' &&
-                    (
-                        nextnext === 'C' ||
-                        nextnext === 'G' ||
-                        nextnext === 'Q'
-                    )
-                ) {
-                    index += 3;
-                    break;
-                }
+                // if (
+                //     next === ' ' &&
+                //     (
+                //         nextnext === 'C' ||
+                //         nextnext === 'G' ||
+                //         nextnext === 'Q'
+                //     )
+                // ) {
+                //     index += 3;
+                //     break;
+                // }
 
                 /*
                  * Bug: Already covered above.
