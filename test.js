@@ -97,6 +97,9 @@ describe('doubleMetaphone(value) for Vowels', () => {
     });
   // I Transforms
   describe("I vowel transforms", () => {
+    it("should transform GHI into I", () => {
+      assert.equal(doubleMetaphone("GHIT"), 'JIT');
+    });
     it("should tansform IA's into I0", () => {
       assert.equal(doubleMetaphone("TIA"), "X");
       assert.equal(doubleMetaphone("IA"), 'I0');
@@ -392,6 +395,65 @@ describe("doubleMetaphone(value) for consonants", () => {
     });
   }); //C transforms
   describe("D Transforms", () => {
-    
+    describe("--DG-- Transforms", () => {
+      it("should make --DGE into TJ", () => {
+        assert.equal(doubleMetaphone("TDGE"), "TJ");
+      });
+      it("should make --DGI into TJ", () => {
+        assert.equal(doubleMetaphone("TDGI"), "TJ");
+      });
+      it("should make --DGY into TJ", () => {
+        assert.equal(doubleMetaphone("TDGY"), "TJ");
+      });
+      it("should make --DGA into --TKA", () => {
+        assert.equal(doubleMetaphone("EDGAR"), "1TK0R");
+      });
+      it("should make --DGA into --TKA", () => {
+        assert.equal(doubleMetaphone("EDGTR"), "1TKTR");
+      });
+    });
+    describe("--DT-- or --DD-- into T", () => {
+      it("should make DD into T", () => {
+        assert.equal(doubleMetaphone("EDDTR"), "1TTR");
+      });
+      it("should make DT into T", () => {
+        assert.equal(doubleMetaphone("EDTR"), "1TR");
+      });
+    });
+    describe("lone D transforms", () => {
+      it("should make D into T", () => {
+        assert.equal(doubleMetaphone("D"), "T");
+        assert.equal(doubleMetaphone("QD"), "KT");
+        assert.equal(doubleMetaphone("DQ"), "TK");
+      });
+    });
   });
+  describe("F transforms", () => {
+    it("should may F into F", () => {
+      assert.equal(doubleMetaphone("F"), "F");
+      assert.equal(doubleMetaphone("TF"), "TF");
+      assert.equal(doubleMetaphone("FT"), "FT");
+    });
+    it("should may FF into F", () => {
+      assert.equal(doubleMetaphone("F"), "F");
+    });
+  });
+  describe("G Transforms", () => {
+    describe("if GH and not proceeded by a vowel or at start of word", () => {
+      it("should make GHs into K", () => {
+        assert.equal(doubleMetaphone("TGHT"), "TKT");
+        assert.equal(doubleMetaphone("TIGHT"), 'T1T');
+        assert.equal(doubleMetaphone("GHT"), "KT");
+        assert.equal(doubleMetaphone("GHAT"), "K0T");
+      });
+    });
+    describe("G.I is at the start is should become a J otherwise K", () => {
+      it("should make GHIT", () => {
+        assert.equal(doubleMetaphone("GHIT"), "JIT");
+      });
+      it("should make GHT", () => {
+        assert.equal(doubleMetaphone("GHT"), "KT");
+      });
+    });
+  });//end of G block
 });// Main describe block
