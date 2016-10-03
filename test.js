@@ -333,5 +333,37 @@ describe("doubleMetaphone(value) for consonants", () => {
         assert.equal(doubleMetaphone("ARCHITECT"), "0RK1T1KT");
       });
     });
+    describe("Scottish MC", () => {
+      it("should make leading MC into MK", () => {
+        assert.equal(doubleMetaphone("MC"), "MK");
+        assert.equal(doubleMetaphone("TMCT"), "TMKT");
+        assert.equal(doubleMetaphone("MCH"), "MK");
+        assert.equal(doubleMetaphone("MCHT"), "MKT");
+        assert.equal(doubleMetaphone("TMCHT"), "TMKT");
+      });
+    });
+    describe("CZ transforms", () => {
+      it("should CZ into Z if at beginning fo the word", () => {
+        assert.equal(doubleMetaphone("CZERKA"), "S1RK0");
+      });
+      it("should make WICZ into ", () => {
+        assert.equal(doubleMetaphone("TWICZ"), "TTS");
+      });
+    });
+    describe("CC transforms", () => {
+      it("should make CCIA into XI0", () => {
+        assert.equal(doubleMetaphone("TCCIA"), "TX0");
+        assert.equal(doubleMetaphone("TCCIAT"), "TX0T");
+      });
+      it("should make MCCA into MKK0", () => {
+        assert.equal(doubleMetaphone("MCCAT"), "MKK0T");
+      });
+      it("should make other itatian CCs into an X", () => {
+        assert.equal(doubleMetaphone("TCCIT"), "TXT");
+        assert.equal(doubleMetaphone("TCCHT"), "TXT");
+        assert.equal(doubleMetaphone("TCCET"), "TXT");
+        assert.equal(doubleMetaphone("TCCHUT"), "TK0T");
+      });
+    });
   }); //C transforms
 });// Main describe block
