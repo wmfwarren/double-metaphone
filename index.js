@@ -189,8 +189,8 @@ function doubleMetaphone(value) {
                 secondary += 'A';
                 index += 2;
               }  else if (next === 'U') {
-                primary += "0W";
-                secondary += "0W";
+                primary += "0";
+                secondary += "0";
                 index += 2;
               } else if (next === 'Y') {
                 primary += "A";
@@ -253,6 +253,14 @@ function doubleMetaphone(value) {
                 secondary += 'I';
                 index += 2;
               } else if (prevprev === "G" && prev === "H") {
+                primary += 'I';
+                secondary += 'I';
+                index++;
+              } else if (next === "G" && nextnext === "H") {
+                primary += 'I';
+                secondary += 'I';
+                index += 3;
+              } else if (next === "G" && nextnext === "N") {
                 primary += 'I';
                 secondary += 'I';
                 index++;
@@ -384,6 +392,10 @@ function doubleMetaphone(value) {
                 primary += 'U';
                 secondary += 'U';
                 index++;
+              } else if (next === "G" && nextnext === "H" && prev !== "O") {
+                primary += 'U';
+                secondary += 'U';
+                index += 3;
               } else {
                 primary += "0";
                 secondary += "0";
@@ -910,9 +922,9 @@ function doubleMetaphone(value) {
                     index === 0 &&
                     INITIAL_G_FOR_KJ.test(value.slice(1, 3))
                 ) {
-                    primary += 'K';
+                    primary += 'J';
                     secondary += 'J';
-                    index += 2;
+                    index ++;
 
                     break;
                 }
@@ -931,7 +943,7 @@ function doubleMetaphone(value) {
                 ) {
                     primary += 'K';
                     secondary += 'J';
-                    index += 2;
+                    index ++;
 
                     break;
                 }
@@ -957,6 +969,8 @@ function doubleMetaphone(value) {
                     ) {
                         primary += 'K';
                         secondary += 'K';
+                        index ++;
+                        break;
                     } else {
                         /*
                          * Always soft if French ending.
@@ -971,7 +985,7 @@ function doubleMetaphone(value) {
                         }
                     }
 
-                    index += 2;
+                    index +=2;
 
                     break;
                 }
