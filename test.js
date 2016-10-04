@@ -490,4 +490,27 @@ describe("doubleMetaphone(value) for consonants", () => {
       });
     });
   });//end of G block
+  describe("Long word Tests", () => {
+    it("should fail 1", () => {
+      assert.equal(doubleMetaphone("LIMINAL"), 1);
+    });
+    it("should fail 2", () => {
+      assert.equal(doubleMetaphone("OPERATIC"), 1);
+    });
+    it("should fail 3", () => {
+      assert.equal(doubleMetaphone("GREGARIOUS"), 1);
+    });
+    it("should fail 4", () => {
+      assert.equal(doubleMetaphone("FELONIOUS"), 1);
+    });
+    it("should fail 5", () => {
+      assert.equal(doubleMetaphone("PERIPHERY"), 1);
+    });
+    it("should fail 6", () => {
+      assert.equal(doubleMetaphone("GARAGE"), 1);
+    });
+    it("should fail 7", () => {
+      assert.equal(doubleMetaphone("LIEUTENANT"), 1);
+    });
+  });
 });// Main describe block

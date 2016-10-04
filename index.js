@@ -266,6 +266,10 @@ function doubleMetaphone(value) {
                 primary += 'I0';
                 secondary += 'I0';
                 index += 2;
+              } else if (next === 'E' && nextnext === "U") {
+                primary += '0';
+                secondary += '0';
+                index += 3;
               } else if (next === 'E') {
                 primary += 'I';
                 secondary += 'I';
