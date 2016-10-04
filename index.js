@@ -21,6 +21,7 @@ var VOWELS,
  */
 
 VOWELS = /[AEIOUY01]/;
+const CONSONANTS = /[BCDFGHJKLMNPQRSTVWXZ]/;
 
 /*
  * Match few Slavo-Germanic values.
@@ -165,7 +166,13 @@ function doubleMetaphone(value) {
 
         switch (characters[index]) {
             case 'A':
-              if (next === 'A') {
+              if (CONSONANTS.test(next)
+                && nextnext === 'E'
+                && (characters[length - 3] || characters[length - 4])) {
+                primary += 'A';
+                secondary += 'A';
+                index++;
+              } else if (next === 'A') {
                 primary += '0';
                 secondary += '0';
                 index += 2;
@@ -196,7 +203,17 @@ function doubleMetaphone(value) {
               }
               break;
             case 'E':
-              if (next === 'A') {
+              if (index === length - 1) {
+                index ++;
+              } else if (index === length - 2 && /[SD]/.test(next) && CONSONANTS.test(prev) && VOWELS.test(prevprev)) {
+                index ++;
+              } else if (CONSONANTS.test(next)
+                && nextnext === 'E'
+                && (characters[length - 3] || characters[length - 4])) {
+                primary += 'E';
+                secondary += 'E';
+                index++;
+              } else if (next === 'A') {
                 primary += 'E';
                 secondary += 'E';
                 index += 2;
@@ -231,11 +248,17 @@ function doubleMetaphone(value) {
               }
               break;
             case 'I':
-              if (prevprev === "C" && prev === "H" && next === "A") {
+             if (prevprev === "C" && prev === "H" && next === "A") {
                 primary += 'I';
                 secondary += 'I';
                 index += 2;
               } else if (prevprev === "G" && prev === "H") {
+                primary += 'I';
+                secondary += 'I';
+                index++;
+              } else if (CONSONANTS.test(next)
+                && nextnext === 'E'
+                && (characters[length - 3] || characters[length - 4])) {
                 primary += 'I';
                 secondary += 'I';
                 index++;
@@ -306,6 +329,12 @@ function doubleMetaphone(value) {
                 primary += "OY";
                 secondary += "OY";
                 index += 2;
+              } else if (CONSONANTS.test(next)
+                && nextnext === 'E'
+                && (characters[length - 3] || characters[length - 4])) {
+                primary += 'O';
+                secondary += 'O';
+                index++;
               } else {
                 primary += "0";
                 secondary += "0";
@@ -345,6 +374,12 @@ function doubleMetaphone(value) {
                 primary += "I";
                 secondary += "I";
                 index += 2;
+              } else if (CONSONANTS.test(next)
+                && nextnext === 'E'
+                && (characters[length - 3] || characters[length - 4])) {
+                primary += 'U';
+                secondary += 'U';
+                index++;
               } else {
                 primary += "0";
                 secondary += "0";

@@ -56,6 +56,41 @@ describe('doubleMetaphone(value) for Vowels', () => {
   });
   // E Transforms
   describe("E vowel transforms", () => {
+    describe("Trailing E's", () => {
+      it("should drop trailing E's", () => {
+        assert.equal(doubleMetaphone("HTE"), 'T');
+      });
+      it("should drop trailing E's proceeded by A", () => {
+        assert.equal(doubleMetaphone("ATED"), 'ATT');
+        assert.equal(doubleMetaphone("ATES"), 'ATS');
+        assert.equal(doubleMetaphone("TATE"), 'TAT');
+        assert.equal(doubleMetaphone("ATE"), 'AT');
+      });
+      it("should drop trailing E's proceeded by E", () => {
+        assert.equal(doubleMetaphone("ETED"), 'ETT');
+        assert.equal(doubleMetaphone("ETES"), 'ETS');
+        assert.equal(doubleMetaphone("TETE"), 'TET');
+        assert.equal(doubleMetaphone("ETE"), 'ET');
+      });
+      it("should drop trailing E's proceeded by I", () => {
+        assert.equal(doubleMetaphone("ITED"), 'ITT');
+        assert.equal(doubleMetaphone("ITES"), 'ITS');
+        assert.equal(doubleMetaphone("TITE"), 'TIT');
+        assert.equal(doubleMetaphone("ITE"), 'IT');
+      });
+      it("should drop trailing E's proceeded by O", () => {
+        assert.equal(doubleMetaphone("OTED"), 'OTT');
+        assert.equal(doubleMetaphone("OTES"), 'OTS');
+        assert.equal(doubleMetaphone("TOTE"), 'TOT');
+        assert.equal(doubleMetaphone("OTE"), 'OT');
+      });
+      it("should drop trailing E's proceeded by U", () => {
+        assert.equal(doubleMetaphone("UTED"), 'UTT');
+        assert.equal(doubleMetaphone("UTES"), 'UTS');
+        assert.equal(doubleMetaphone("TUTE"), 'TUT');
+        assert.equal(doubleMetaphone("UTE"), 'UT');
+      });
+    });
     it("should transform EA's into E's ", () => {
       assert.equal(doubleMetaphone("TEA"), "TE");
       assert.equal(doubleMetaphone("EA"), 'E');
@@ -63,7 +98,6 @@ describe('doubleMetaphone(value) for Vowels', () => {
     });
     it("should transform EE's into E's ", () => {
       assert.equal(doubleMetaphone("TEE"), "TE");
-      assert.equal(doubleMetaphone("EE"), 'E');
       assert.equal(doubleMetaphone("EET"), "ET");
     });
     it("should transform EI's into E's ", () => {
@@ -90,8 +124,8 @@ describe('doubleMetaphone(value) for Vowels', () => {
       assert.equal(doubleMetaphone("EYT"), "ET");
     });
     it("should transform E's to 1's", () => {
-        assert.equal(doubleMetaphone("TE"), "T1");
-        assert.equal(doubleMetaphone("E"), '1');
+        assert.equal(doubleMetaphone("TE"), "T");
+        assert.equal(doubleMetaphone("E"), '');
         assert.equal(doubleMetaphone("ET"), "1T");
       });
     });
