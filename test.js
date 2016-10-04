@@ -588,6 +588,19 @@ describe("doubleMetaphone(value) for consonants", () => {
       });
     });
   });//end of G block
+  describe("H transforms", () => {
+    it("should keep Hs the beginning of a word followed by a vowel", () => {
+      assert.equal(doubleMetaphone("HAT"), "H0T");
+      assert.equal(doubleMetaphone("HTAT"), "T0T");
+    });
+    it("should keep Hs between two vowels but not consonants", () => {
+      assert.equal(doubleMetaphone("IHAT"), "1H0T");
+      assert.equal(doubleMetaphone("THTAT"), "2T0T");
+    });
+  }); //end H tests
+  describe("J transforms", () => {
+
+  });
   describe("Long word Tests", () => {
     it.skip("should fail 1", () => {
       assert.equal(doubleMetaphone("LIMINAL"), 1);

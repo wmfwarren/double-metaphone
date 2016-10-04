@@ -1008,8 +1008,6 @@ function doubleMetaphone(value) {
                 if (VOWELS.test(next) && (index === 0 || VOWELS.test(prev))) {
                     primary += 'H';
                     secondary += 'H';
-
-                    index++;
                 }
 
                 index++;
@@ -1474,7 +1472,7 @@ function doubleMetaphone(value) {
                         primary += 'T';
                         secondary += 'T';
                     } else {
-                        primary += '0';
+                        primary += '2';
                         secondary += 'T';
                     }
 
