@@ -736,7 +736,7 @@ describe("doubleMetaphone(value) for consonants", () => {
         assert.equal(doubleMetaphone("SIAT"), "SI0T");
       });
     });
-    describe("Germanic and Slavic S+Consonatn", () => {
+    describe("Germanic and Slavic S+Consonant", () => {
       it("should make SZEET to SET", () => {
         assert.equal(doubleMetaphone("SZEET"), "SET");
       });
@@ -757,8 +757,48 @@ describe("doubleMetaphone(value) for consonants", () => {
       });
     });
     describe("SC--", () => {
-
+      describe("SCH--", () => {
+        it("should make sch with dutch origin into X", () => {
+          assert.equal(doubleMetaphone("SCHERMERHORN"), "X1RM1R0RN");
+          assert.equal(doubleMetaphone("SCHENKER"), "X1NK1R");
+          assert.equal(doubleMetaphone("SCHAL"), "X0L");
+        });
+        it("should make sch with no dutch origin into SK", () => {
+          assert.equal(doubleMetaphone("SCHOOL"), "SK0L");
+        });
+      });
+      describe("SC[IEY]", () => {
+        it("should make SCIT int S1T", () => {
+          assert.equal(doubleMetaphone("SCIT"), "S1T");
+        });
+        it("should make SCET int S1T", () => {
+          assert.equal(doubleMetaphone("SCET"), "S1T");
+        });
+        it("should make SCYT int S1T", () => {
+          assert.equal(doubleMetaphone("SCYT"), "S1T");
+        });
+      });
+      describe("SC-- to SK otherwise", () => {
+        it("should make SCAT into SK0T", () => {
+          assert.equal(doubleMetaphone("SCAT"), "SK0T");
+          assert.equal(doubleMetaphone("TSCAT"), "TSK0T");
+          assert.equal(doubleMetaphone("SCT"), "SKT");
+        });
+      });
     });
+    it("should make S into S", () => {
+      assert.equal(doubleMetaphone("ST"), "ST");
+      assert.equal(doubleMetaphone("S"), "S");
+      assert.equal(doubleMetaphone("TS"), "TS");
+    });
+    it("should make SS into S", () => {
+      assert.equal(doubleMetaphone("SST"), "ST");
+      assert.equal(doubleMetaphone("SS"), "S");
+      assert.equal(doubleMetaphone("TSS"), "TS");
+    });
+  });
+  describe("T Transforms", () => {
+
   });
   describe.skip("Long word Demonstrations", () => {
     it("should fail 1 'LIMINAL'", () => {

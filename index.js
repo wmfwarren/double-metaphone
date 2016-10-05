@@ -1326,7 +1326,7 @@ function doubleMetaphone(value) {
                     (
                         index === 0 && (
                             next === 'L' || next === 'M' ||
-                            next === 'N' || next === 'W'
+                            next === 'N'
                         )
                     )
                 ) {
@@ -1388,7 +1388,7 @@ function doubleMetaphone(value) {
 
                         break;
                     }
-
+                    //sc--
                     if (
                         nextnext === 'I' ||
                         nextnext === 'E' ||
@@ -1396,13 +1396,13 @@ function doubleMetaphone(value) {
                     ) {
                         primary += 'S';
                         secondary += 'S';
-                        index += 3;
+                        index += 2;
                         break;
                     }
 
                     primary += 'SK';
                     secondary += 'SK';
-                    index += 3;
+                    index += 2;
 
                     break;
                 }
