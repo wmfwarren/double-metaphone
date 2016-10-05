@@ -798,7 +798,40 @@ describe("doubleMetaphone(value) for consonants", () => {
     });
   });
   describe("T Transforms", () => {
-
+    it("Should Mat --TION-- int X", () => {
+      assert.equal(doubleMetaphone("TION"), "XN");
+      assert.equal(doubleMetaphone("ATION"), "0XN");
+      assert.equal(doubleMetaphone("TIONT"), "XNT");
+    });
+    it("Should Mat CATCH int K0X", () => {
+      assert.equal(doubleMetaphone("CATCH"), "K0X");
+    });
+    it("should handle THOMAS to T0M0S", () => {
+      assert.equal(doubleMetaphone("THOMAS"), "T0M0S");
+    });
+    it("should handle THAMES to T0M1S", () => {
+      assert.equal(doubleMetaphone("THAMES"), "TAMS");
+    });
+    it("Should make TD into T", () => {
+      assert.equal(doubleMetaphone("HOTDOG"), "H0T0K");
+    });
+    it("Should make TT into T", () => {
+      assert.equal(doubleMetaphone("HATT"), "H0T");
+      assert.equal(doubleMetaphone("TTAH"), "T0");
+      assert.equal(doubleMetaphone("TT"), 'T');
+    });
+  });
+  describe("V transforms", () => {
+    it("Should make V into F", () => {
+      assert.equal(doubleMetaphone("VT"), "FT");
+      assert.equal(doubleMetaphone("V"), "F");
+      assert.equal(doubleMetaphone("TV"), "TF");
+    });
+    it("Should make VV into F", () => {
+      assert.equal(doubleMetaphone("VVT"), "FT");
+      assert.equal(doubleMetaphone("VV"), "F");
+      assert.equal(doubleMetaphone("TVV"), "TF");
+    });
   });
   describe.skip("Long word Demonstrations", () => {
     it("should fail 1 'LIMINAL'", () => {
