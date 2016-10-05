@@ -833,6 +833,31 @@ describe("doubleMetaphone(value) for consonants", () => {
       assert.equal(doubleMetaphone("TVV"), "TF");
     });
   });
+  describe("W Transfroms", () => {
+    describe("Silent Ws", () => {
+      it("should make WR into R", () => {
+        assert.equal(doubleMetaphone("WREN"), "R1N");
+        assert.equal(doubleMetaphone("WRAP"), "R0P");
+        assert.equal(doubleMetaphone("TWRAP"), "TR0P");
+      });
+    });
+    it("Should test the W in Polish words liek Filipowicz", () => {
+      assert.equal(doubleMetaphone("Filipowicz"), "F1L1P0TS");
+    });
+  });
+  describe("X Transfroms", () => {
+    it("should make Freand AUX into ", () => {
+      assert.equal(doubleMetaphone("BREAUX"), "");
+    });
+    it("X transforms", () => {
+      assert.equal(doubleMetaphone("EXCITE"), "1KSIT");
+      assert.equal(doubleMetaphone("EXXITE"), "1KSIT");
+      assert.equal(doubleMetaphone("EX"), "1KS");
+    });
+  });
+  describe("Z Transforms". () => {
+
+  });
   describe.skip("Long word Demonstrations", () => {
     it("should fail 1 'LIMINAL'", () => {
       assert.equal(doubleMetaphone("LIMINAL"), 1);

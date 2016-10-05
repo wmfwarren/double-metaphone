@@ -1529,49 +1529,49 @@ function doubleMetaphone(value) {
                     break;
                 }
 
-                if (index === 0) {
-                    /*
-                     * `Wasserman` should match `Vasserman`.
-                     */
-
-                    if (VOWELS.test(next)) {
-                        primary += 'A';
-                        secondary += 'F';
-                    } else if (next === 'H') {
-                        /*
-                         * Need `Uomo` to match `Womo`.
-                         */
-
-                        primary += 'A';
-                        secondary += 'A';
-                    }
-                }
+                // if (index === 0) {
+                //     /*
+                //      * `Wasserman` should match `Vasserman`.
+                //      */
+                //
+                //     if (VOWELS.test(next)) {
+                //         primary += 'A';
+                //         secondary += 'F';
+                //     } else if (next === 'H') {
+                //         /*
+                //          * Need `Uomo` to match `Womo`.
+                //          */
+                //
+                //         primary += 'A';
+                //         secondary += 'A';
+                //     }
+                // }
 
                 /*
                  * `Arnow` should match `Arnoff`.
                  */
 
-                if (
-                    (
-                        (prev === 'E' || prev === 'O') &&
-                        next === 'S' && nextnext === 'K' &&
-                        (
-                            characters[index + 3] === 'I' ||
-                            characters[index + 3] === 'Y'
-                        )
-                    ) ||
-                    /*
-                     * Maybe a bug? Shouldn't this be general Germanic?
-                     */
-
-                    value.slice(0, 3) === 'SCH' ||
-                    (index === last && VOWELS.test(prev))
-                ) {
-                    secondary += 'F';
-                    index++;
-
-                    break;
-                }
+                // if (
+                //     (
+                //         (prev === 'E' || prev === 'O') &&
+                //         next === 'S' && nextnext === 'K' &&
+                //         (
+                //             characters[index + 3] === 'I' ||
+                //             characters[index + 3] === 'Y'
+                //         )
+                //     ) ||
+                //     /*
+                //      * Maybe a bug? Shouldn't this be general Germanic?
+                //      */
+                //
+                //     value.slice(0, 3) === 'SCH' ||
+                //     (index === last && VOWELS.test(prev))
+                // ) {
+                //     secondary += 'F';
+                //     index++;
+                //
+                //     break;
+                // }
 
                 /*
                  * Polish such as `Filipowicz`.
@@ -1616,6 +1616,8 @@ function doubleMetaphone(value) {
                 }
 
                 if (next === 'C' || next === 'X') {
+                  primary += 'KS';
+                  secondary += 'KS';
                     index++;
                 }
 
