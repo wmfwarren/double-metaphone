@@ -203,7 +203,11 @@ function doubleMetaphone(value) {
               }
               break;
             case 'E':
-              if (index === length - 1) {
+              if (index === length - 1 && prev === 'H') {
+                primary += 'E';
+                secondary += 'E';
+                index ++;
+              } else if (index === length - 1) {
                 index ++;
               } else if (index === length - 2 && /[SD]/.test(next) && CONSONANTS.test(prev) && VOWELS.test(prevprev)) {
                 index ++;
@@ -1057,25 +1061,25 @@ function doubleMetaphone(value) {
                 /*
                  * Spanish pron. of such as `bajador`.
                  */
-                } else if (
-                    !isSlavoGermanic &&
-                    (next === 'A' || next === 'O') &&
-                    VOWELS.test(prev)
-                ) {
-                    primary += 'J';
-                    secondary += 'H';
-                } else if (index === last) {
-                    primary += 'J';
-                } else if (
-                    prev !== 'S' && prev !== 'K' && prev !== 'L' &&
-                    !J_FOR_J_EXCEPTION.test(next)
-                ) {
-                    primary += 'J';
-                    secondary += 'J';
-                /*
-                 * It could happen.
-                 */
-                } else if (next === 'J') {
+              } // else if (
+                //     !isSlavoGermanic &&
+                //     (next === 'A' || next === 'O') &&
+                //     VOWELS.test(prev)
+                // ) {
+                //     primary += 'J';
+                //     secondary += 'H';
+                // } else if (index === last) {
+                //     primary += 'J';
+                // } else if (
+                //     prev !== 'S' && prev !== 'K' && prev !== 'L' &&
+                //     !J_FOR_J_EXCEPTION.test(next)
+                // ) {
+                //     primary += 'J';
+                //     secondary += 'J';
+                // /*
+                //  * It could happen.
+                //  */
+                else if (next === 'J') {
                     index++;
                 }
 
@@ -1093,42 +1097,45 @@ function doubleMetaphone(value) {
 
                 break;
             case 'L':
+                // if (next === 'L') {
+                //     /*
+                //      * Spanish such as `cabrillo`, `gallegos`.
+                //      */
+                //
+                //     if (
+                //         (
+                //             index === length - 3 &&
+                //             (
+                //                 (
+                //                     prev === 'I' &&
+                //                     (nextnext === 'O' || nextnext === 'A')
+                //                 ) ||
+                //                 (
+                //                     prev === 'A' &&
+                //                     nextnext === 'E'
+                //                 )
+                //             )
+                //         ) || (
+                //             prev === 'A' && nextnext === 'E' &&
+                //             (
+                //                 (
+                //                     characters[last] === 'A' ||
+                //                     characters[last] === 'O'
+                //                 ) ||
+                //                 ALLE.test(value.slice(last - 1, length))
+                //             )
+                //         )
+                //     ) {
+                //         primary += '1';
+                //         index += 2;
+                //
+                //         break;
+                //     }
+                //
+                //     index++;
+                // }
                 if (next === 'L') {
-                    /*
-                     * Spanish such as `cabrillo`, `gallegos`.
-                     */
-
-                    if (
-                        (
-                            index === length - 3 &&
-                            (
-                                (
-                                    prev === 'I' &&
-                                    (nextnext === 'O' || nextnext === 'A')
-                                ) ||
-                                (
-                                    prev === 'A' &&
-                                    nextnext === 'E'
-                                )
-                            )
-                        ) || (
-                            prev === 'A' && nextnext === 'E' &&
-                            (
-                                (
-                                    characters[last] === 'A' ||
-                                    characters[last] === 'O'
-                                ) ||
-                                ALLE.test(value.slice(last - 1, length))
-                            )
-                        )
-                    ) {
-                        primary += 'L';
-                        index += 2;
-
-                        break;
-                    }
-
-                    index++;
+                  index ++;
                 }
 
                 primary += 'L';
@@ -1165,12 +1172,6 @@ function doubleMetaphone(value) {
                     index++;
                 }
 
-                index++;
-                primary += 'N';
-                secondary += 'N';
-
-                break;
-            case 'Ñ':
                 index++;
                 primary += 'N';
                 secondary += 'N';
