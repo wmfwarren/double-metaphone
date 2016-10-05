@@ -571,7 +571,7 @@ describe("doubleMetaphone(value) for consonants", () => {
     describe("Other Language Gs", () => {
       it ("should make G's into Js and Ks", () => {
         assert.equal(doubleMetaphone("BIAGGI"), "PI0JE");
-        assert.equal(doubleMetaphone("TGIER"), "TJ1");
+        assert.equal(doubleMetaphone("TGIER"), "TJ1R");
         assert.equal(doubleMetaphone("GET"), "K1T");
         assert.equal(doubleMetaphone("GETTING"), "K1T1NK");
       });
@@ -680,6 +680,86 @@ describe("doubleMetaphone(value) for consonants", () => {
       });
     });
   });
+  describe("Q transforms", () => {
+    it("should make Q into K", () => {
+      assert.equal(doubleMetaphone("TQ"), "TK");
+      assert.equal(doubleMetaphone("Q"), "K");
+      assert.equal(doubleMetaphone("QT"), "KT");
+    });
+  });
+  describe("R transforms", () => {
+    it("should make RR into R", () => {
+      assert.equal(doubleMetaphone("RR"), "R");
+      assert.equal(doubleMetaphone("TRR"), "TR");
+      assert.equal(doubleMetaphone("RRT"), "RT");
+    });
+    it("should make R into R", () => {
+      assert.equal(doubleMetaphone("R"), "R");
+      assert.equal(doubleMetaphone("TR"), "TR");
+      assert.equal(doubleMetaphone("RT"), "RT");
+    });
+  });
+  describe("S Transforms", () => {
+    describe("Silent S following I or Y should be removed if preceeding an L", () => {
+      it("should make ISLAND into IL0NT", () => {
+        assert.equal(doubleMetaphone("ISLAND"), "IL0NT");
+      });
+      it("should make IYLAND into IL0NT", () => {
+        assert.equal(doubleMetaphone("ISLAND"), "IL0NT");
+      });
+      it("should make AISLE into AIL", () => {
+        assert.equal(doubleMetaphone("AISLE"), "IL");
+      });
+    });
+    describe("shoudl count for special case SUGAR--", () => {
+      it("should make SUGARMOMMA into X0K0RM0M0", () => {
+        assert.equal(doubleMetaphone("SUGARMOMMA"), "X0K0RM0M0");
+      });
+    });
+    describe("SH Strings", () => {
+      it("should make english SH into a X", () => {
+        assert.equal(doubleMetaphone("ENGLISH"), "1NKL1X");
+        assert.equal(doubleMetaphone("SHOUT"), "X0T");
+      });
+      it("should make germanic SH into a X", () => {
+        assert.equal(doubleMetaphone("SHEIM"), "SEM");
+        assert.equal(doubleMetaphone("SHOEK"), "SOK");
+        assert.equal(doubleMetaphone("SHOLM"), "S0LM");
+        assert.equal(doubleMetaphone("SHOLZ"), "S0LS");
+      });
+    });
+    describe("S[VOWEL]", () => {
+      it("should make SIO into SI0", () => {
+        assert.equal(doubleMetaphone("SIOT"), "S0T");
+      });
+      it("should make SIA into SI0", () => {
+        assert.equal(doubleMetaphone("SIAT"), "SI0T");
+      });
+    });
+    describe("Germanic and Slavic S+Consonatn", () => {
+      it("should make SZEET to SET", () => {
+        assert.equal(doubleMetaphone("SZEET"), "SET");
+      });
+      it("should make TSZEET to TSET", () => {
+        assert.equal(doubleMetaphone("TSZEET"), "TSET");
+      });
+      it("should make SLEET to SET", () => {
+        assert.equal(doubleMetaphone("SLEET"), "SLET");
+      });
+      it("should make SMEET to SET", () => {
+        assert.equal(doubleMetaphone("SMEET"), "SMET");
+      });
+      it("should make SNEET to SET", () => {
+        assert.equal(doubleMetaphone("SNEET"), "SNET");
+      });
+      it("should make SWEET to SET", () => {
+        assert.equal(doubleMetaphone("SWEET"), "SWET");
+      });
+    });
+    describe("SC--", () => {
+
+    });
+  });
   describe.skip("Long word Demonstrations", () => {
     it("should fail 1 'LIMINAL'", () => {
       assert.equal(doubleMetaphone("LIMINAL"), 1);
@@ -710,6 +790,9 @@ describe("doubleMetaphone(value) for consonants", () => {
     });
     it("should fail 10 'THE'", () => {
       assert.equal(doubleMetaphone("THE"), 1);
+    });
+    it("should fail 11 'DAMN'", () => { ////////////Need a fix for MN
+      assert.equal(doubleMetaphone("DAMN"), 1);
     });
   });
 });// Main describe block

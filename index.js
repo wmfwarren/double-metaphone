@@ -184,6 +184,10 @@ function doubleMetaphone(value) {
                 primary += 'A';
                 secondary += 'A';
                 index += 2;
+              } else if (next === 'I' && nextnext === "S") {
+                primary += 'I';
+                secondary += 'I';
+                index += 2;
               } else if (next === 'I') {
                 primary += 'A';
                 secondary += 'A';
@@ -265,6 +269,10 @@ function doubleMetaphone(value) {
                 secondary += 'I';
                 index += 3;
               } else if (next === "G" && nextnext === "N") {
+                primary += 'I';
+                secondary += 'I';
+                index++;
+              } else if (next === 'S' && nextnext === "L") {
                 primary += 'I';
                 secondary += 'I';
                 index++;
@@ -411,6 +419,10 @@ function doubleMetaphone(value) {
                 primary += 'E';
                 secondary += 'E';
                 index += 2;
+              } else if (next === 'S' && nextnext === "L") {
+                primary += 'I';
+                secondary += 'I';
+                index++;
               } else if (next === 'A') {
                 primary += '10';
                 secondary += '10';
@@ -1216,27 +1228,29 @@ function doubleMetaphone(value) {
                 /*
                  * French such as `Rogier`, but exclude `Hochmeier`.
                  */
+                //
+                // if (
+                //     index === last &&
+                //     !isSlavoGermanic &&
+                //     prev === 'E' &&
+                //     characters[index - 2] === 'I' &&
+                //     characters[index - 4] !== 'M' &&
+                //     (
+                //         characters[index - 3] !== 'E' &&
+                //         characters[index - 3] !== 'A'
+                //     )
+                // ) {
+                //     secondary += 'R';
+                // } else {
 
-                if (
-                    index === last &&
-                    !isSlavoGermanic &&
-                    prev === 'E' &&
-                    characters[index - 2] === 'I' &&
-                    characters[index - 4] !== 'M' &&
-                    (
-                        characters[index - 3] !== 'E' &&
-                        characters[index - 3] !== 'A'
-                    )
-                ) {
-                    secondary += 'R';
-                } else {
-                    primary += 'R';
-                    secondary += 'R';
-                }
+                // }
 
                 if (next === 'R') {
                     index++;
                 }
+
+                primary += 'R';
+                secondary += 'R';
 
                 index++;
 
@@ -1296,7 +1310,7 @@ function doubleMetaphone(value) {
                         secondary += 'S';
                     }
 
-                    index += 3;
+                    index++;
 
                     break;
                 }
