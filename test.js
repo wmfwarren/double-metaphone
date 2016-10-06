@@ -545,7 +545,6 @@ describe("doubleMetaphone(value) for consonants", () => {
       describe("OUGH endings", () => {
         it("should make the GH into an F", () => {
           assert.equal(doubleMetaphone("TOUGH"), "T0F");
-          assert.equal(doubleMetaphone("BOUGH"), "P0F");
         });
       });
     });//end parkers rule for G
@@ -846,8 +845,10 @@ describe("doubleMetaphone(value) for consonants", () => {
     });
   });
   describe("X Transfroms", () => {
-    it("should make Freand AUX into ", () => {
-      assert.equal(doubleMetaphone("BREAUX"), "");
+    it("should make French AUX into ", () => {
+      assert.equal(doubleMetaphone("AUXILIARY"), "0KS1LI0RE");
+      assert.equal(doubleMetaphone("FAUX"), "FO");
+      assert.equal(doubleMetaphone("BREAUX"), "PR1O");
     });
     it("X transforms", () => {
       assert.equal(doubleMetaphone("EXCITE"), "1KSIT");
@@ -855,8 +856,20 @@ describe("doubleMetaphone(value) for consonants", () => {
       assert.equal(doubleMetaphone("EX"), "1KS");
     });
   });
-  describe("Z Transforms". () => {
-
+  describe("Z Transforms", () => {
+    it("should make the Chinese ZH into J", () => {
+      assert.equal(doubleMetaphone("ZHOU"), "J0");
+    });
+    it("should make ZZ into S", () => {
+      assert.equal(doubleMetaphone("ZZ"), "S");
+      assert.equal(doubleMetaphone("TZZ"), "TS");
+      assert.equal(doubleMetaphone("ZZT"), "ST");
+    });
+    it("should make Z into S", () => {
+      assert.equal(doubleMetaphone("Z"), "S");
+      assert.equal(doubleMetaphone("TZ"), "TS");
+      assert.equal(doubleMetaphone("ZT"), "ST");
+    });
   });
   describe.skip("Long word Demonstrations", () => {
     it("should fail 1 'LIMINAL'", () => {

@@ -172,6 +172,10 @@ function doubleMetaphone(value) {
                 primary += 'A';
                 secondary += 'A';
                 index++;
+              } else if (index !== 0 && next === "U" && nextnext === "X") {
+                primary += 'O';
+                secondary += 'O';
+                index += 3;
               } else if (next === 'A') {
                 primary += '0';
                 secondary += '0';
@@ -221,7 +225,7 @@ function doubleMetaphone(value) {
                 primary += 'E';
                 secondary += 'E';
                 index++;
-              } else if (next === 'A') {
+              } else if (next === 'A' && characters[last] !== 'X') {
                 primary += 'E';
                 secondary += 'E';
                 index += 2;
@@ -1635,19 +1639,20 @@ function doubleMetaphone(value) {
                     index += 2;
 
                     break;
-                } else if (
-                    (
-                        next === 'Z' &&
-                        (
-                            nextnext === 'A' || nextnext === 'I' ||
-                            nextnext === 'O'
-                        )
-                    ) ||
-                    (isSlavoGermanic && index > 0 && prev !== 'T')
-                ) {
-                    primary += 'S';
-                    secondary += 'TS';
-                } else {
+                // } else if (
+                //     (
+                //         next === 'Z' &&
+                //         (
+                //             nextnext === 'A' || nextnext === 'I' ||
+                //             nextnext === 'O'
+                //         )
+                //     ) ||
+                //     (isSlavoGermanic && index > 0 && prev !== 'T')
+                // ) {
+                //     primary += 'S';
+                //     secondary += 'TS';
+                // }
+              } else {
                     primary += 'S';
                     secondary += 'S';
                 }
