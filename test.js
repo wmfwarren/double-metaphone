@@ -60,9 +60,10 @@ describe('doubleMetaphone(value) for Vowels', () => {
       it("should drop trailing E's if not preceeded by H", () => {
         assert.equal(doubleMetaphone("HTE"), 'T');
       });
-      it("should make --HE into --E unless HE then HE", () => {
-        assert.equal(doubleMetaphone("JHE"), 'JE');
+      it("Test for HE, WE, and BE", () => {
         assert.equal(doubleMetaphone("HE"), 'HE');
+        assert.equal(doubleMetaphone("WE"), 'WE');
+        assert.equal(doubleMetaphone("BE"), 'PE');
       });
       it("should drop trailing E's proceeded by A", () => {
         assert.equal(doubleMetaphone("ATED"), 'ATT');
@@ -128,8 +129,8 @@ describe('doubleMetaphone(value) for Vowels', () => {
       assert.equal(doubleMetaphone("EYT"), "ET");
     });
     it("should transform E's to 1's", () => {
-        assert.equal(doubleMetaphone("TE"), "T");
-        assert.equal(doubleMetaphone("E"), '');
+        assert.equal(doubleMetaphone("TE"), "TE"); //a 2 lenght string ending in E
+        assert.equal(doubleMetaphone("E"), '1');
         assert.equal(doubleMetaphone("ET"), "1T");
       });
     });
@@ -274,11 +275,11 @@ describe('doubleMetaphone(value) for Vowels', () => {
       assert.equal(doubleMetaphone("TOUGH"), "T0F");
     });
     // Q transformes
-    it.skip("should tansform --QUE's into KWU", () => {
-      assert.equal(doubleMetaphone("TQUE"), "TKU"); //// need to fix
+    it("should tansform --QUE's into KWU", () => {
       assert.equal(doubleMetaphone("QUE"), 'KU');
+      assert.equal(doubleMetaphone("TQUE"), "TKU"); //// need to fix
     });
-    it.skip("should tansform QUE--'s into KW", () => {
+    it("should tansform QUE--'s into KW", () => {
       assert.equal(doubleMetaphone("TQUET"), "TKT"); //// need to fix
     });
   });
@@ -506,29 +507,29 @@ describe("doubleMetaphone(value) for consonants", () => {
         it("should make BUGH into PU", () => {
           assert.equal(doubleMetaphone("BUGH"), "PU");
         });
-        it.skip("should make HUGH into PU", () => {
+        it("should make HUGH into HU", () => {
           assert.equal(doubleMetaphone("HUGH"), "HU");
         });
-        it("should make DUGH into PU", () => {
+        it("should make DUGH into TU", () => {
           assert.equal(doubleMetaphone("DUGH"), "TU");
         });
       });
       describe("[BHD]OUGH drops the GH", () => {
-        it("should make BUGH into PU", () => {
+        it("should make BUGH into P0", () => {
           assert.equal(doubleMetaphone("BOUGH"), "P0");
         });
-        it("should make HUGH into PU", () => {
+        it("should make HUGH into H0", () => {
           assert.equal(doubleMetaphone("HOUGH"), "H0");
         });
-        it("should make DUGH into PU", () => {
+        it("should make DUGH into T0", () => {
           assert.equal(doubleMetaphone("DOUGH"), "T0");
         });
       });
       describe("[BHD]ROUGH drops the GH", () => {
-        it("should make BUGH into PU", () => {
+        it("should make BUGH into PR0", () => {
           assert.equal(doubleMetaphone("BROUGH"), "PR0");
         });
-        it("should make HUGH into PU", () => {
+        it("should make HUGH into R0", () => {
           assert.equal(doubleMetaphone("HROUGH"), "R0");
         });
       });
@@ -901,6 +902,15 @@ describe("doubleMetaphone(value) for consonants", () => {
     });
     it("should fail 11 'DAMN'", () => { ////////////Need a fix for MN
       assert.equal(doubleMetaphone("DAMN"), 1);
+    });
+    it("should fail 12 'WE'", () => { ////////////Need a fix for MN
+      assert.equal(doubleMetaphone("WE"), 1);
+    });
+    it("should fail 13 'TE'", () => { ////////////Need a fix for MN
+      assert.equal(doubleMetaphone("WE"), 1);
+    });
+    it("should fail 14 'SE'", () => { ////////////Need a fix for MN
+      assert.equal(doubleMetaphone("WE"), 1);
     });
   });
 });// Main describe block

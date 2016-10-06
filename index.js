@@ -212,12 +212,14 @@ function doubleMetaphone(value) {
               }
               break;
             case 'E':
-              if (index === length - 1 && prev === 'H') {
+              //for words like HE, WE, BE
+              if (index === last && CONSONANTS.test(prev) && length == 2) {
                 primary += 'E';
                 secondary += 'E';
                 index ++;
-              } else if (index === length - 1) {
+              } else if (index === last && length > 2 ) {
                 index ++;
+              //if the string --[VOWEL][CONSONANT]E[SD] is matched drop the E
               } else if (index === length - 2 && /[SD]/.test(next) && CONSONANTS.test(prev) && VOWELS.test(prevprev)) {
                 index ++;
               } else if (CONSONANTS.test(next)
@@ -1228,9 +1230,16 @@ function doubleMetaphone(value) {
                     index++;
                 }
 
-                index++;
+                if(next === 'U' && nextnext === 'E' && index === last -2) {
+                  primary += 'KU';
+                  secondary += 'KU';
+                  index++;
+                  break;
+                }
+
                 primary += 'K';
                 secondary += 'K';
+                index++;
 
                 break;
             case 'R':
@@ -1597,7 +1606,8 @@ function doubleMetaphone(value) {
 
                     break;
                 }
-
+                primary += 'W';
+                secondary += 'W';
                 index++;
 
                 break;
