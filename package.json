@@ -13,7 +13,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/wooorm/double-metaphone.git"
+    "url": "git+https://github.com/wooorm/double-metaphone.git"
   },
   "author": "Titus Wormer <tituswormer@gmail.com>",
   "bin": {
@@ -45,5 +45,10 @@
   },
   "dependencies": {
     "chai": "^3.5.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/wooorm/double-metaphone/issues"
+  },
+  "homepage": "https://github.com/wooorm/double-metaphone#readme",
+  "main": "index.js"
 }

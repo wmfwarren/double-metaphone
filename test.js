@@ -285,6 +285,10 @@ describe('doubleMetaphone(value) for Vowels', () => {
   });
   // Y vowel Transforms
   describe("Y as a vowel transforms", () => {
+    it("should make the Y like the STYLE an I", () => {
+      assert.equal(doubleMetaphone("STYLE"), "STIL");
+      assert.equal(doubleMetaphone("PYRE"), "PIR");
+    });
     it("should tansform YA's into 10", () => {
       assert.equal(doubleMetaphone("TYA"), "T10");
       assert.equal(doubleMetaphone("YA"), '10');
@@ -843,12 +847,12 @@ describe("doubleMetaphone(value) for consonants", () => {
     });
   });
   describe("X Transfroms", () => {
-    it("should make French AUX into ", () => {
+    it("should make French AUX into O", () => {
       assert.equal(doubleMetaphone("AUXILIARY"), "0KS1LI0RE");
       assert.equal(doubleMetaphone("FAUX"), "FO");
       assert.equal(doubleMetaphone("BREAUX"), "PR1O");
     });
-    it("X transforms", () => {
+    it("X transforms to KS", () => {
       assert.equal(doubleMetaphone("EXCITE"), "1KSIT");
       assert.equal(doubleMetaphone("EXXITE"), "1KSIT");
       assert.equal(doubleMetaphone("EX"), "1KS");
@@ -907,10 +911,10 @@ describe("doubleMetaphone(value) for consonants", () => {
       assert.equal(doubleMetaphone("WE"), 1);
     });
     it("should fail 13 'TE'", () => { ////////////Need a fix for MN
-      assert.equal(doubleMetaphone("WE"), 1);
+      assert.equal(doubleMetaphone("TE"), 1);
     });
     it("should fail 14 'SE'", () => { ////////////Need a fix for MN
-      assert.equal(doubleMetaphone("WE"), 1);
+      assert.equal(doubleMetaphone("SE"), 1);
     });
   });
 });// Main describe block

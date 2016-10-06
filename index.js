@@ -430,6 +430,13 @@ function doubleMetaphone(value) {
                 primary += 'E';
                 secondary += 'E';
                 index += 2;
+              } else if (CONSONANTS.test(next)
+                && nextnext === 'E'
+                && length > 2
+                && (index === length - 3 || index === length - 4 )) {
+                primary += 'I';
+                secondary += 'I';
+                index++;
               } else if (next === 'S' && nextnext === "L") {
                 primary += 'I';
                 secondary += 'I';
