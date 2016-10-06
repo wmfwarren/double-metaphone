@@ -4,1106 +4,913 @@
  * Dependencies.
  */
 
-var doubleMetaphone,
-    assert;
-
-doubleMetaphone = require('./');
-assert = require('assert');
+const doubleMetaphone = require('./');
+const {assert} = require("chai");
 
 /*
  * Tests.
  */
 
-describe('doubleMetaphone(value)', function () {
-    it('should be of type `function`', function () {
-        assert(typeof doubleMetaphone === 'function');
-    });
-
-    it('should ignore casing', function () {
-        var result;
-
-        result = doubleMetaphone('hiccups');
-
-        assert(doubleMetaphone('HICCUPS')[0] === result[0]);
-        assert(doubleMetaphone('HICCUPS')[1] === result[1]);
-        assert(doubleMetaphone('HiCcUpS')[0] === result[0]);
-        assert(doubleMetaphone('HiCcUpS')[1] === result[1]);
-    });
-
-    it('should drop the initial G when followed by N', function () {
-        assert(doubleMetaphone('gnarl')[0].charAt(0) === 'N');
-    });
-
-    it('should drop the initial K when followed by N', function () {
-        assert(doubleMetaphone('knack')[0].charAt(0) === 'N');
-    });
-
-    it('should drop the initial P when followed by N', function () {
-        assert(doubleMetaphone('pneumatic')[0].charAt(0) === 'N');
-    });
-
-    it('should drop the initial W when followed by R', function () {
-        assert(doubleMetaphone('wrack')[0].charAt(0) === 'R');
-    });
-
-    it('should drop the initial P when followed by S', function () {
-        assert(doubleMetaphone('psycho')[0].charAt(0) === 'S');
-    });
-
-    it('should transform the initial X to S', function () {
-        assert(doubleMetaphone('Xavier')[0].charAt(0) === 'S');
-    });
-
-    it('should transform all initial vowels to A', function () {
-        var vowels,
-            index,
-            vowel;
-
-        vowels = 'aeiouy';
-        index = -1;
-
-        while (vowels[++index]) {
-            vowel = vowels[index];
-
-            assert(doubleMetaphone(vowel)[0] === 'A');
-        }
-    });
-
-    it('should drop all non-initial vowels', function () {
-        var vowels,
-            index,
-            vowel;
-
-        vowels = 'aeiouy';
-        index = -1;
-
-        while (vowels[++index]) {
-            vowel = vowels[index];
-
-            assert(doubleMetaphone('b' + vowel)[0].length === 1);
-        }
-    });
-
-    it('should transform B to P', function () {
-        assert(doubleMetaphone('b')[0] === 'P');
-        assert(doubleMetaphone('bb')[0] === 'P');
-    });
-
-    it('should transform Ç to S', function () {
-        assert(doubleMetaphone('Ç')[0] === 'S');
-    });
-
-    it('should transform C to K, when preceded by A (not preceded by a ' +
-        'vowel), followed by H (in turn not followed by I and E, unless ' +
-        'the E is in a sequence of BACHER or MACHER)', function () {
-            assert(doubleMetaphone('ACH')[0].charAt(1) === 'K');
-            assert(doubleMetaphone('AACH')[0].charAt(2) !== 'K');
-            assert(doubleMetaphone('ACHI')[0].charAt(1) !== 'K');
-            assert(doubleMetaphone('ACHB')[0].charAt(1) === 'K');
-            assert(doubleMetaphone('MACHER')[1].charAt(1) === 'K');
-            assert(doubleMetaphone('BACHER')[1].charAt(1) === 'K');
-        }
-    );
-
-    it('should transform the C to S, when in an initial CAESAR', function () {
-        assert(doubleMetaphone('CAESAR')[0].charAt(0) === 'S');
-    });
-
-    it('should transform the C to K, when in CHIA', function () {
-        assert(doubleMetaphone('chianti')[0].charAt(0) === 'K');
-    });
-
-    it('should transform the C to K and X, when in CHAE', function () {
-        assert(doubleMetaphone('michael')[0].charAt(1) === 'K');
-        assert(doubleMetaphone('michael')[1].charAt(1) === 'X');
-    });
-
-    it('should transform the C to K, when in an initial CHIA', function () {
-        assert(doubleMetaphone('chiastic')[0].charAt(0) === 'K');
-    });
-
-    it('should transform the C to K, when in an initial CHEM', function () {
-        assert(doubleMetaphone('chemical')[0].charAt(0) === 'K');
-    });
-
-    it('should transform the C to K, when in an initial CHOR', function () {
-        assert(doubleMetaphone('choral')[0].charAt(0) === 'K');
-    });
-
-    it('should transform the C to K, when in an initial CHYM', function () {
-        assert(doubleMetaphone('chyme')[0].charAt(0) === 'K');
-    });
-
-    it('should transform the C to K, when in an initial CHARAC', function () {
-        assert(doubleMetaphone('character')[0].charAt(0) === 'K');
-    });
-
-    it('should transform the C to K, when in an initial CHARIS', function () {
-        assert(doubleMetaphone('charisma')[0].charAt(0) === 'K');
-    });
-
-    it('should transform the C to K, when followed by H, and the given ' +
-        'value starts with "van "', function () {
-            assert(doubleMetaphone('van ch')[0].charAt(2) === 'K');
-        }
-    );
-
-    it('should transform the C to K, when followed by H, and the given ' +
-        'value starts with "von "', function () {
-            assert(doubleMetaphone('von ch')[0].charAt(2) === 'K');
-        }
-    );
-
-    // This might be a bug, not sure. Now other C's will transform to K in a
-    // string sarting with `sch`.
-    it('should transform the C to K, when followed by H, and the given ' +
-        'value starts with SCH', function () {
-            assert(doubleMetaphone('schooner')[0].charAt(1) === 'K');
-        }
-    );
-
-    it('should transform the C to K, when in ORCHES', function () {
-        assert(doubleMetaphone('orchestra')[0].charAt(2) === 'K');
-    });
-
-    it('should transform the C to K, when in ARCHIT', function () {
-        assert(doubleMetaphone('architect')[0].charAt(2) === 'K');
-    });
-
-    it('should NOT transform the C to K, when in ARCH', function () {
-        assert(doubleMetaphone('arch')[0].charAt(2) !== 'K');
-    });
-
-    it('should transform the C to K, when in ORCHID', function () {
-        assert(doubleMetaphone('orchid')[0].charAt(2) === 'K');
-    });
-
-    it('should transform the C to K, when followed by HT', function () {
-        assert(doubleMetaphone('chthonic')[0].charAt(0) === 'K');
-    });
-
-    it('should transform the C to K, when followed by HS', function () {
-        assert(doubleMetaphone('fuchsia')[0].charAt(1) === 'K');
-    });
-
-    it('should transform the C to K, when an initial, and followed by ' +
-        'H and either " ", B, F, H, L, M, N, R, V, or W',
-        function () {
-            assert(doubleMetaphone('chloride')[0].charAt(0) === 'K');
-            assert(doubleMetaphone('chroma')[0].charAt(0) === 'K');
-        }
-    );
-
-    it('should transform the C to K, when preceded by A, E, O, or U, ' +
-        'followed by H and either " ", B, F, H, L, M, N, R, V, or W',
-        function () {
-            assert(doubleMetaphone('tichner')[1].charAt(1) === 'K');
-        }
-    );
-
-    it('should transform the C in MCH to K', function () {
-        assert(doubleMetaphone('McHugh')[0].charAt(1) === 'K');
-    });
-
-    it('should transform the C to X, when in an initial CH', function () {
-        assert(doubleMetaphone('chore')[0].charAt(0) === 'X');
-    });
-
-    it('should transform the C to X and K, when followed by H', function () {
-        var metaphone;
-
-        metaphone = doubleMetaphone('achievement');
-
-        assert(metaphone[0].charAt(1) === 'X');
-        assert(metaphone[1].charAt(1) === 'K');
-    });
-
-    it('should transform the C to S and X, when followed by Z and not ' +
-        'preceded by WI', function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('czerny');
-
-            assert(metaphone[0].charAt(0) === 'S');
-            assert(metaphone[1].charAt(0) === 'X');
-        }
-    );
-
-    it('should transform the C to X, when followed by CIA', function () {
-        assert(doubleMetaphone('focaccia')[0].charAt(2) === 'X');
-    });
-
-    it('should transform the C to KS, when in an initial ACC, followed by ' +
-        'either E, I, or H (but not HU)', function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('accident')[0];
-
-            assert(metaphone.charAt(1) === 'K');
-            assert(metaphone.charAt(2) === 'S');
-
-            metaphone = doubleMetaphone('accede')[0];
-
-            assert(metaphone.charAt(1) === 'K');
-            assert(metaphone.charAt(2) === 'S');
-        }
-    );
-
-    it('should transform the C to KS, when in UCCEE or UCCES', function () {
-        var metaphone;
-
-        metaphone = doubleMetaphone('succeed')[0];
-
-        assert(metaphone.charAt(1) === 'K');
-        assert(metaphone.charAt(2) === 'S');
-    });
-
-    it('should transform the C to X, when followed by C (but not in an ' +
-        'initial MCC), either E, I, or H (but not HU)', function () {
-            assert(doubleMetaphone('bacci')[0].charAt(1) === 'X');
-            assert(doubleMetaphone('bertucci')[0].charAt(3) === 'X');
-        }
-    );
-
-    it('should transform the C to K, when followed by C (but not in an ' +
-        'initial MCC)', function () {
-            assert(doubleMetaphone('hiccups')[0].charAt(1) === 'K');
-        }
-    );
-
-    it('should transform the C to K, when followed by either G, K, or Q',
-        function () {
-            assert(doubleMetaphone('knack')[0].charAt(1) === 'K');
-        }
-    );
-
-    it('should transform the C to S and X, when followed by I and either ' +
-        'E, or O', function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('ancient');
-
-            assert(metaphone[0].charAt(2) === 'S');
-            assert(metaphone[1].charAt(2) === 'X');
-
-            metaphone = doubleMetaphone('delicious');
-
-            assert(metaphone[0].charAt(2) === 'S');
-            assert(metaphone[1].charAt(2) === 'X');
-        }
-    );
-
-    it('should transform the C to S, when followed by either I, E, or Y',
-        function () {
-            assert(doubleMetaphone('acicula')[0].charAt(1) === 'S');
-
-            assert(doubleMetaphone('abduce')[0].charAt(3) === 'S');
-
-            assert(doubleMetaphone('acyl')[0].charAt(1) === 'S');
-        }
-    );
-
-    it('should transform "C C" to K', function () {
-        assert(doubleMetaphone('Mac Caffrey')[0].charAt(1) === 'K');
-    });
-
-    it('should transform "C G" to K', function () {
-        assert(doubleMetaphone('Mac Gregor')[0].charAt(1) === 'K');
-    });
-
-    it('should transform "C G" to K', function () {
-        assert(doubleMetaphone('Mac Quillan')[0].charAt(1) === 'K');
-    });
-
-    it('should transform CK to K', function () {
-        assert(doubleMetaphone('aback')[0].charAt(2) === 'K');
-    });
-
-    it('should transform CQ to K', function () {
-        assert(doubleMetaphone('acquit')[0].charAt(1) === 'K');
-    });
-
-    it('should transform CC to K, when not followed by E or I', function () {
-        assert(doubleMetaphone('acclimate')[0].charAt(1) === 'K');
-    });
-
-    it('should transform DGE to J', function () {
-        assert(doubleMetaphone('edge')[0].charAt(1) === 'J');
-    });
-
-    it('should transform DGI to J', function () {
-        assert(doubleMetaphone('pidgin')[0].charAt(1) === 'J');
-    });
-
-    it('should transform DGY to J', function () {
-        assert(doubleMetaphone('edgy')[0].charAt(1) === 'J');
-    });
-
-    it('should transform DG to TK', function () {
-        assert(doubleMetaphone('Edgar')[0].slice(1, 3) === 'TK');
-    });
-
-    it('should transform DG to TK', function () {
-        assert(doubleMetaphone('Edgar')[0].slice(1, 3) === 'TK');
-    });
-
-    it('should transform DT to T', function () {
-        assert(doubleMetaphone('width')[0].charAt(1) === 'T');
-    });
-
-    it('should transform DD to T', function () {
-        assert(doubleMetaphone('add')[0].charAt(1) === 'T');
-    });
-
-    it('should transform D to T', function () {
-        assert(doubleMetaphone('Abduce')[0].charAt(2) === 'T');
-    });
-
-    it('should transform FF to F', function () {
-        assert(doubleMetaphone('affect')[0].charAt(1) === 'F');
-    });
-
-    it('should transform F to F', function () {
-        assert(doubleMetaphone('abaft')[0].charAt(2) === 'F');
-    });
-
-    it('should transform GH to K when preceded by a consonant', function () {
-        assert(doubleMetaphone('aargh')[0].charAt(2) === 'K');
-    });
-
-    it('should transform initial GHI to J', function () {
-        assert(doubleMetaphone('ghislane')[0].charAt(0) === 'J');
-    });
-
-    it('should transform initial GH to K', function () {
-        assert(doubleMetaphone('ghoul')[0].charAt(0) === 'K');
-    });
-
-    it('should drop GH in B.GH, H.GH, or D.GH', function () {
-        assert(doubleMetaphone('hugh')[0] === 'H');
-    });
-
-    it('should drop GH in B..GH, H..GH, or D..GH', function () {
-        assert(doubleMetaphone('bough')[0] === 'P');
-    });
-
-    it('should drop GH in B...GH or H...GH', function () {
-        assert(doubleMetaphone('broughton')[0] === 'PRTN');
-    });
-
-    it('should transform GH to F in C.UGH, G.UGH, L.UGH, R.UGH, T.UGH',
-        function () {
-            assert(doubleMetaphone('laugh')[0] === 'LF');
-        }
-    );
-
-    it('should transform GH to K, when preceded by anything other than I',
-        function () {
-            assert(doubleMetaphone('curagh')[0] === 'KRK');
-        }
-    );
-
-    it('should drop GH', function () {
-        assert(doubleMetaphone('weight')[0] === 'AT');
-    });
-
-    it('should transform GN to KN and N, when preceded by a vowel and ^, ' +
-        'and not Slavo-Germanic', function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('agnize');
-
-            assert(metaphone[0].slice(0, 3) === 'AKN');
-            assert(metaphone[1].slice(0, 2) === 'AN');
-        }
-    );
-
-    it('should transform GN to N and KN, when not followed by EY and Y, ' +
-        'and not Slavo-Germanic', function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('acceptingness');
-
-            assert(metaphone[0].slice(-3) === 'NNS');
-            assert(metaphone[1].slice(-4) === 'NKNS');
-        }
-    );
-
-    it('should transform GN to KN', function () {
-        assert(doubleMetaphone('cagney')[0] === 'KKN');
-    });
-
-    it('should transform GLI to KL and L', function () {
-        var metaphone;
-
-        metaphone = doubleMetaphone('tagliaro');
-
-        assert(metaphone[0] === 'TKLR');
-        assert(metaphone[1] === 'TLR');
-    });
-
-    it('should transform an initial GY., GES, GEP, GEB, GEL, GEY, GIB, ' +
-        'GIL, GIN, GIE, GEI, and GER to K and J', function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('Gerben');
-
-            assert(metaphone[0].charAt(0) === 'K');
-            assert(metaphone[1].charAt(0) === 'J');
-        }
-    );
-
-    it('should transform GER to K and J, when not in DANGER, RANGER, and ' +
-        'MANGER, and not preceded by E and I', function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('auger');
-
-            assert(metaphone[0].charAt(1) === 'K');
-            assert(metaphone[1].charAt(1) === 'J');
-        }
-    );
-
-    it('should transform GY to K and J, when not preceded by E, I, R, ' +
-        'and O', function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('bulgy');
-
-            assert(metaphone[0].charAt(2) === 'K');
-            assert(metaphone[1].charAt(2) === 'J');
-        }
-    );
-
-    it('should transform the G in GET to K', function () {
-        var metaphone;
-
-        metaphone = doubleMetaphone('altogether');
-
-        assert(metaphone[0].charAt(3) === 'K');
-    });
-
-    it('should transform G to K, when Germanic and followed by E, I, or Y',
-        function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('Van Agema');
-
-            assert(metaphone[0].charAt(2) === 'K');
-        }
-    );
-
-    it('should transform G to K, when Germanic, preceded by A or O, and ' +
-        'followed by GI',
-        function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('Von Goggin');
-
-            assert(metaphone[0].charAt(3) === 'K');
-        }
-    );
-
-    it('should transform G to J, when followed by "IER "', function () {
-        var metaphone;
-
-        metaphone = doubleMetaphone('tangier');
-
-        assert(metaphone[0].charAt(2) === 'J');
-    });
-
-    it('should transform G to J and K, when followed by E, I, or Y, or ' +
-        'preceded by A or O and followed by GI',
-        function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('biaggi');
-
-            assert(metaphone[0].charAt(1) === 'J');
-            assert(metaphone[1].charAt(1) === 'K');
-        }
-    );
-
-    it('should transform GG to K', function () {
-        assert(doubleMetaphone('GG')[0] === 'K');
-    });
-
-    it('should transform G to K', function () {
-        assert(doubleMetaphone('G')[0] === 'K');
-    });
-
-    it('should keep H when initial and followed by a vowel', function () {
-        assert(doubleMetaphone('ha')[0] === 'H');
-    });
-
-    it('should keep H when both followed and preceded by a vowel',
-        function () {
-            assert(doubleMetaphone('aha')[0] === 'AH');
-        }
-    );
-
-    it('should drop H', function () {
-        assert(doubleMetaphone('h')[0] === '');
-    });
-
-    it('should transform J to H when obviously spanish (an initial "SAN ")',
-        function () {
-            assert(doubleMetaphone('San Jacinto')[0].charAt(2) === 'H');
-        }
-    );
-
-    it('should transform J to H in an initial "J... "', function () {
-        assert(doubleMetaphone('Jose')[0].charAt(0) === 'H');
-    });
-
-    it('should transform the J to J and H, when in JOSE', function () {
-        var metaphone;
-
-        metaphone = doubleMetaphone('Joseph');
-
-        assert(metaphone[0].charAt(0) === 'J');
-        assert(metaphone[1].charAt(0) === 'H');
-    });
-
-    it('should transform an initial J to J and A', function () {
-        var metaphone;
-
-        metaphone = doubleMetaphone('Jankelowicz');
-
-        assert(metaphone[0].charAt(0) === 'J');
-        assert(metaphone[1].charAt(0) === 'A');
-    });
-
-    it('should transform J to J and H, when preceded by a vowel, followed ' +
-        'by A or O, and not Slavo-Germanic', function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('bajador');
-
-            assert(metaphone[0].charAt(1) === 'J');
-            assert(metaphone[1].charAt(1) === 'H');
-        }
-    );
-
-    it('should both keep and drop a final J', function () {
-        var metaphone;
-
-        metaphone = doubleMetaphone('svaraj');
-
-        assert(metaphone[0] === 'SFRJ');
-        assert(metaphone[1] === 'SFR');
-    });
-
-    it('should keep J when not preceded by S, K, and L, and not followed ' +
-        'by L, T, K, S, N, M, B, and Z', function () {
-            assert(doubleMetaphone('abject')[0].charAt(2) === 'J');
-        }
-    );
-
-    it('should drop JJ', function () {
-        assert(doubleMetaphone('sjji')[0] === 'S');
-    });
-
-    it('should drop J', function () {
-        assert(doubleMetaphone('disject')[0] === 'TSKT');
-    });
-
-    it('should transform KK to K', function () {
-        assert(doubleMetaphone('trekker')[0] === 'TRKR');
-    });
-
-    it('should keep K', function () {
-        assert(doubleMetaphone('like')[0] === 'LK');
-    });
-
-    it('should both transform LL to L, and drop it, when in a final ILLO, ' +
-        'ILLA and ALLE', function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('cabrillo');
-
-            assert(metaphone[0] === 'KPRL');
-            assert(metaphone[1] === 'KPR');
-
-            metaphone = doubleMetaphone('villa');
-
-            assert(metaphone[0] === 'FL');
-            assert(metaphone[1] === 'F');
-
-            metaphone = doubleMetaphone('crevalle');
-
-            assert(metaphone[0] === 'KRFL');
-            assert(metaphone[1] === 'KRF');
-        }
-    );
-
-    it('should both transform the LL to L, and drop it, in ALLE, when the ' +
-        'given value ends in A, O, AS, or OS', function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('allegretto');
-
-            assert(metaphone[0] === 'ALKRT');
-            assert(metaphone[1] === 'AKRT');
-
-            metaphone = doubleMetaphone('allegros');
-
-            assert(metaphone[0] === 'ALKRS');
-            assert(metaphone[1] === 'AKRS');
-        }
-    );
-
-    it('should transform LL to L', function () {
-        assert(doubleMetaphone('ll')[0] === 'L');
-    });
-
-    it('should keep L', function () {
-        assert(doubleMetaphone('l')[0] === 'L');
-    });
-
-    it('should transform a final UMB to M', function () {
-        assert(doubleMetaphone('thumb')[0] === '0M');
-    });
-
-    it('should transform UMB to M when followed by ER', function () {
-        assert(doubleMetaphone('dumber')[0] === 'TMR');
-    });
-
-    it('should transform MM to M', function () {
-        assert(doubleMetaphone('mm')[0] === 'M');
-    });
-
-    it('should keep M', function () {
-        assert(doubleMetaphone('m')[0] === 'M');
-    });
-
-    it('should transform NN to N', function () {
-        assert(doubleMetaphone('nn')[0] === 'N');
-    });
-
-    it('should keep N', function () {
-        assert(doubleMetaphone('n')[0] === 'N');
-    });
-
-    it('should transform Ñ to N', function () {
-        assert(doubleMetaphone('Ñ')[0] === 'N');
-    });
-
-    it('should transform PH to F', function () {
-        assert(doubleMetaphone('ph')[0] === 'F');
-    });
-
-    it('should transform PB to P', function () {
-        assert(doubleMetaphone('pb')[0] === 'P');
-    });
-
-    it('should transform PP to P', function () {
-        assert(doubleMetaphone('pp')[0] === 'P');
-    });
-
-    it('should keep P', function () {
-        assert(doubleMetaphone('p')[0] === 'P');
-    });
-
-    it('should transform QQ to K', function () {
-        assert(doubleMetaphone('qq')[0] === 'K');
-    });
-
-    it('should transform Q to K', function () {
-        assert(doubleMetaphone('q')[0] === 'K');
-    });
-
-    it('should both drop and keep a final R when preceded by IE, in ' +
-        'turn not preceded by ME and MA', function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('Xavier');
-
-            assert(metaphone[0] === 'SF');
-            assert(metaphone[1] === 'SFR');
-        }
-    );
-
-    it('should transform RR to R', function () {
-        assert(doubleMetaphone('rr')[0] === 'R');
-    });
-
-    it('should keep R', function () {
-        assert(doubleMetaphone('r')[0] === 'R');
-    });
-
-    it('should drop S when preceded by I or Y and followed by L',
-        function () {
-            assert(doubleMetaphone('island')[0] === 'ALNT');
-        }
-    );
-
-    it('should drop S when preceded by I or Y and followed by L',
-        function () {
-            assert(doubleMetaphone('island')[0] === 'ALNT');
-        }
-    );
-
-    it('should transform the S to X and S in an initial SUGAR', function () {
-        var metaphone;
-
-        metaphone = doubleMetaphone('sugar');
-
-        assert(metaphone[0].charAt(0) === 'X');
-        assert(metaphone[1].charAt(0) === 'S');
-    });
-
-    it('should transform the SH to S in SHEIM, SHOEK, SHOLM, SHOLZ',
-        function () {
-            assert(doubleMetaphone('Sholz')[0].charAt(0) === 'S');
-        }
-    );
-
-    it('should transform the SH to X', function () {
-        assert(doubleMetaphone('sh')[0].charAt(0) === 'X');
-    });
-
-    it('should transform SIO and SIA to S and X, when not Slavo-Germanic',
-        function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('sio');
-
-            assert(metaphone[0].charAt(0) === 'S');
-            assert(metaphone[1].charAt(0) === 'X');
-        }
-    );
-
-    it('should transform SIO and SIA to S, when Slavo-Germanic',
-        function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('sioricz');
-
-            assert(metaphone[0].charAt(0) === 'S');
-            assert(metaphone[1].charAt(0) === 'S');
-        }
-    );
-
-    it('should transform SZ to X and S', function () {
-        var metaphone;
-
-        metaphone = doubleMetaphone('sz');
-
-        assert(metaphone[0] === 'S');
-        assert(metaphone[1] === 'X');
-    });
-
-    it('should transform S to X and S when followed by L, M, N, or W',
-        function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('sl');
-
-            assert(metaphone[0] === 'SL');
-            assert(metaphone[1] === 'XL');
-        }
-    );
-
-    it('should transform SCH to X and SK when followed by ER or EN',
-        function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('schenker');
-
-            assert(metaphone[0] === 'XNKR');
-            assert(metaphone[1] === 'SKNKR');
-        }
-    );
-
-    it('should transform SCH to SK when followed by OO, UY, ED, or EM',
-        function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('schooner');
-
-            assert(metaphone[0] === 'SKNR');
-            assert(metaphone[1] === 'SKNR');
-        }
-    );
-
-    it('should transform SCH to X and S, when initial, and not followed ' +
-        'by a non-vowel and W', function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('schlepp');
-
-            assert(metaphone[0] === 'XLP');
-            assert(metaphone[1] === 'SLP');
-        }
-    );
-
-    it('should transform SCH to X', function () {
-        assert(doubleMetaphone('borscht')[0] === 'PRXT');
-    });
-
-    it('should transform SCI, SCE, and SCY to S', function () {
-        assert(doubleMetaphone('sci')[0] === 'S');
-    });
-
-    it('should transform SC. to SK', function () {
-        assert(doubleMetaphone('scu')[0] === 'SK');
-    });
-
-    it('should drop and keep S, when final and preceded by AI or OI',
-        function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('ois');
-
-            assert(metaphone[0] === 'A');
-            assert(metaphone[1] === 'AS');
-        }
-    );
-
-    it('should transform SS to S', function () {
-        assert(doubleMetaphone('ss')[0] === 'S');
-    });
-
-    it('should keep S', function () {
-        assert(doubleMetaphone('s')[0] === 'S');
-    });
-
-    it('should transform TIO to X, when followed by N', function () {
-        assert(doubleMetaphone('tion')[0] === 'XN');
-    });
-
-    it('should transform TIA and TCH to X', function () {
-        assert(doubleMetaphone('tia')[0] === 'X');
-        assert(doubleMetaphone('tch')[0] === 'X');
-    });
-
-    it('should transform TH to T, when followed by OM or AM', function () {
-        assert(doubleMetaphone('thom')[0] === 'TM');
-        assert(doubleMetaphone('tham')[0] === 'TM');
-    });
-
-    it('should transform TH to T, when Germanic', function () {
-        assert(doubleMetaphone('Von Goethals')[0].charAt(3) === 'T');
-    });
-
-    it('should transform TT to T, when Germanic and followed by H',
-        function () {
-            assert(doubleMetaphone('Von Matthes')[0].charAt(3) === 'T');
-        }
-    );
-
-    it('should transform TH to 0 and T', function () {
-        var metaphone;
-
-        metaphone = doubleMetaphone('th');
-
-        assert(metaphone[0] === '0');
-        assert(metaphone[1] === 'T');
-    });
-
-    it('should transform TT to T', function () {
-        assert(doubleMetaphone('tt')[0] === 'T');
-    });
-
-    it('should transform TD to T', function () {
-        assert(doubleMetaphone('td')[0] === 'T');
-    });
-
-    it('should keep T', function () {
-        assert(doubleMetaphone('t')[0] === 'T');
-    });
-
-    it('should transform VV to F', function () {
-        assert(doubleMetaphone('vv')[0] === 'F');
-    });
-
-    it('should transform V to F', function () {
-        assert(doubleMetaphone('v')[0] === 'F');
-    });
-
-    it('should transform WR to R', function () {
-        assert(doubleMetaphone('awr')[0] === 'AR');
-    });
-
-    it('should transform W to A and F, when initial and followed by a vowel',
-        function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('wa');
-
-            assert(metaphone[0] === 'A');
-            assert(metaphone[1] === 'F');
-        }
-    );
-
-    it('should transform W to A, when initial and followed by H',
-        function () {
-            assert(doubleMetaphone('wh')[0] === 'A');
-        }
-    );
-
-    it('should both drop and transform W to F, when in EWSKI, EWSKY, ' +
-        'OWSKI, or OWSKY', function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('Tsjaikowski');
-
-            assert(metaphone[0] === 'TSKSK');
-            assert(metaphone[1] === 'TSKFSK');
-
-            metaphone = doubleMetaphone('Tsjaikowsky');
-
-            assert(metaphone[0] === 'TSKSK');
-            assert(metaphone[1] === 'TSKFSK');
-        }
-    );
-
-    it('should both drop and transform W to F, when the value starts ' +
-        'with SCH', function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('schwa');
-
-            assert(metaphone[0] === 'X');
-            assert(metaphone[1] === 'XF');
-        }
-    );
-
-    it('should both drop and transform W to F, when final and preceded by ' +
-        'a vowel', function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('Arnow');
-
-            assert(metaphone[0] === 'ARN');
-            assert(metaphone[1] === 'ARNF');
-        }
-    );
-
-    it('should transform W to TS and FX, when followed by ICZ or ITZ',
-        function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('Filipowicz');
-
-            assert(metaphone[0] === 'FLPTS');
-            assert(metaphone[1] === 'FLPFX');
-
-            metaphone = doubleMetaphone('Filipowitz');
-
-            assert(metaphone[0] === 'FLPTS');
-            assert(metaphone[1] === 'FLPFX');
-        }
-    );
-
-    it('should drop W', function () {
-        assert(doubleMetaphone('w')[0] === '');
-    });
-
-    it('should transform X to KS, when final', function () {
-        assert(doubleMetaphone('matrix')[0] === 'MTRKS');
-    });
-
-    it('should transform X to KS, when preceded by IAU, EAU, AU, or OU',
-        function () {
-            assert(doubleMetaphone('iauxa')[0] === 'AKS');
-            assert(doubleMetaphone('eauxa')[0] === 'AKS');
-            assert(doubleMetaphone('auxa')[0] === 'AKS');
-            assert(doubleMetaphone('ouxa')[0] === 'AKS');
-        }
-    );
-
-    it('should drop XC', function () {
-        assert(doubleMetaphone('AXC')[0] === 'A');
-    });
-
-    it('should drop XX', function () {
-        assert(doubleMetaphone('axx')[0] === 'A');
-    });
-
-    it('should drop X', function () {
-        assert(doubleMetaphone('axe')[0] === 'A');
-    });
-
-    it('should transform ZH to J', function () {
-        assert(doubleMetaphone('zhao')[0] === 'J');
-    });
-
-    it('should transform Z to S and TS, when followed by ZA, ZI, or ZO',
-        function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('zza');
-
-            assert(metaphone[0] === 'S');
-            assert(metaphone[1] === 'TS');
-
-            metaphone = doubleMetaphone('zzi');
-
-            assert(metaphone[0] === 'S');
-            assert(metaphone[1] === 'TS');
-
-            metaphone = doubleMetaphone('zzo');
-
-            assert(metaphone[0] === 'S');
-            assert(metaphone[1] === 'TS');
-        }
-    );
-
-    it('should transform Z to S and TS, when not initial, not ' +
-        'Slavo-Germanic, and not preceded by T', function () {
-            var metaphone;
-
-            metaphone = doubleMetaphone('Mazurkiewicz');
-
-            assert(metaphone[0] === 'MSRKTS');
-            assert(metaphone[1] === 'MTSRKFX');
-        }
-    );
-
-    it('should transform ZZ to S', function () {
-        assert(doubleMetaphone('zz')[0] === 'S');
-    });
-
-    it('should transform Z to S', function () {
-        assert(doubleMetaphone('z')[0] === 'S');
-    });
+//Design Note
+//A captial T in most cases stands for a string that is before or after the portion being tested
+//it should be able to be filled in with almost any string and the test should pass.
+
+describe('doubleMetaphone(value) for Vowels', () => {
+  // A Transforms
+  describe("A vowel transforms", () => {
+    it("should tansform AA's into 0", () => {
+      assert.equal(doubleMetaphone("TAA"), "T0");
+      assert.equal(doubleMetaphone("AA"), '0');
+      assert.equal(doubleMetaphone("AAT"), "0T");
+    });
+    it("should tansform AO's into 0", () => {
+      assert.equal(doubleMetaphone("TAO"), "T0");
+      assert.equal(doubleMetaphone("AO"), '0');
+      assert.equal(doubleMetaphone("AOT"), "0T");
+    });
+    it("should tansform AE's into A's", () => {
+      assert.equal(doubleMetaphone("TAE"), "TA");
+      assert.equal(doubleMetaphone("AE"), 'A');
+      assert.equal(doubleMetaphone("AET"), "AT");
+    });
+    it("should tansform AI's into A's", () => {
+      assert.equal(doubleMetaphone("TAI"), "TA");
+      assert.equal(doubleMetaphone("AI"), 'A');
+      assert.equal(doubleMetaphone("AIT"), "AT");
+    });
+    it("should tansform AY's into A's", () => {
+      assert.equal(doubleMetaphone("TAY"), "TA");
+      assert.equal(doubleMetaphone("AY"), 'A');
+      assert.equal(doubleMetaphone("AYT"), "AT");
+    });
+    it("should tansform AU's into OW's", () => {
+      assert.equal(doubleMetaphone("TAU"), "T0");
+      assert.equal(doubleMetaphone("AU"), '0');
+      assert.equal(doubleMetaphone("AUT"), "0T");
+    });
+    it("should tansform A's into 0's", () => {
+      assert.equal(doubleMetaphone("TA"), "T0");
+      assert.equal(doubleMetaphone("A"), '0');
+      assert.equal(doubleMetaphone("AT"), "0T");
+    });
+  });
+  // E Transforms
+  describe("E vowel transforms", () => {
+    describe("Trailing E's", () => {
+      it("should drop trailing E's if not preceeded by H", () => {
+        assert.equal(doubleMetaphone("HTE"), 'T');
+      });
+      it("Test for HE, WE, and BE", () => {
+        assert.equal(doubleMetaphone("HE"), 'HE');
+        assert.equal(doubleMetaphone("WE"), 'WE');
+        assert.equal(doubleMetaphone("BE"), 'PE');
+      });
+      it("should drop trailing E's proceeded by A", () => {
+        assert.equal(doubleMetaphone("ATED"), 'ATT');
+        assert.equal(doubleMetaphone("ATES"), 'ATS');
+        assert.equal(doubleMetaphone("TATE"), 'TAT');
+        assert.equal(doubleMetaphone("ATE"), 'AT');
+      });
+      it("should drop trailing E's proceeded by E", () => {
+        assert.equal(doubleMetaphone("ETED"), 'ETT');
+        assert.equal(doubleMetaphone("ETES"), 'ETS');
+        assert.equal(doubleMetaphone("TETE"), 'TET');
+        assert.equal(doubleMetaphone("ETE"), 'ET');
+      });
+      it("should drop trailing E's proceeded by I", () => {
+        assert.equal(doubleMetaphone("ITED"), 'ITT');
+        assert.equal(doubleMetaphone("ITES"), 'ITS');
+        assert.equal(doubleMetaphone("TITE"), 'TIT');
+        assert.equal(doubleMetaphone("ITE"), 'IT');
+      });
+      it("should drop trailing E's proceeded by O", () => {
+        assert.equal(doubleMetaphone("OTED"), 'OTT');
+        assert.equal(doubleMetaphone("OTES"), 'OTS');
+        assert.equal(doubleMetaphone("TOTE"), 'TOT');
+        assert.equal(doubleMetaphone("OTE"), 'OT');
+      });
+      it("should drop trailing E's proceeded by U", () => {
+        assert.equal(doubleMetaphone("UTED"), 'UTT');
+        assert.equal(doubleMetaphone("UTES"), 'UTS');
+        assert.equal(doubleMetaphone("TUTE"), 'TUT');
+        assert.equal(doubleMetaphone("UTE"), 'UT');
+      });
+    });
+    it("should transform EA's into E's ", () => {
+      assert.equal(doubleMetaphone("TEA"), "TE");
+      assert.equal(doubleMetaphone("EA"), 'E');
+      assert.equal(doubleMetaphone("EAT"), "ET");
+    });
+    it("should transform EE's into E's ", () => {
+      assert.equal(doubleMetaphone("TEE"), "TE");
+      assert.equal(doubleMetaphone("EET"), "ET");
+    });
+    it("should transform EI's into E's ", () => {
+      assert.equal(doubleMetaphone("TEI"), "TE");
+      assert.equal(doubleMetaphone("EI"), 'E');
+      assert.equal(doubleMetaphone("EIT"), "ET");
+    });
+    it("should transform EO's into EO's ", () => {
+      assert.equal(doubleMetaphone("TEO"), "TEO");
+      assert.equal(doubleMetaphone("EO"), 'EO');
+      assert.equal(doubleMetaphone("EOT"), "EOT");
+    });
+    it("should transform EU's into U's if at the start of the word ", () => {
+      assert.equal(doubleMetaphone("EUT"), "UT");
+      assert.equal(doubleMetaphone("EU"), "U");
+    });
+    it("should transform EU's into 0's if not at start of word", () => {
+      assert.equal(doubleMetaphone("TEU"), "T0");
+      assert.equal(doubleMetaphone("TEUT"), "T0T");
+    });
+    it("should transform EY's into E's ", () => {
+      assert.equal(doubleMetaphone("TEY"), "TE");
+      assert.equal(doubleMetaphone("EY"), 'E');
+      assert.equal(doubleMetaphone("EYT"), "ET");
+    });
+    it("should transform E's to 1's", () => {
+        assert.equal(doubleMetaphone("TE"), "TE"); //a 2 lenght string ending in E
+        assert.equal(doubleMetaphone("E"), '1');
+        assert.equal(doubleMetaphone("ET"), "1T");
+      });
+    });
+  // I Transforms
+  describe("I vowel transforms", () => {
+    it("should transform GHI into I", () => {
+      assert.equal(doubleMetaphone("GHIT"), 'JIT');
+    });
+    it("should tansform IA's into I0", () => {
+      assert.equal(doubleMetaphone("TIA"), "X");
+      assert.equal(doubleMetaphone("IA"), 'I0');
+      assert.equal(doubleMetaphone("IAT"), "I0T");
+    });
+    it("should tansform IO's into 0", () => {
+      assert.equal(doubleMetaphone("TIO"), "T0");
+      assert.equal(doubleMetaphone("IO"), '0');
+      assert.equal(doubleMetaphone("IOT"), "0T");
+    });
+    it("should tansform IE's into I's", () => {
+      assert.equal(doubleMetaphone("TIE"), "TI");
+      assert.equal(doubleMetaphone("IE"), 'I');
+      assert.equal(doubleMetaphone("IET"), "IT");
+    });
+    it("should tansform II's into I's", () => {
+      assert.equal(doubleMetaphone("TII"), "TI");
+      assert.equal(doubleMetaphone("II"), 'I');
+      assert.equal(doubleMetaphone("IIT"), "IT");
+    });
+    it("should tansform IY's into A's", () => {
+      assert.equal(doubleMetaphone("TIY"), "TIY");
+      assert.equal(doubleMetaphone("IY"), 'IY');
+      assert.equal(doubleMetaphone("IYT"), "IYT");
+    });
+    it("should tansform IU's followed by M into E0's", () => {
+      assert.equal(doubleMetaphone("TIUM"), "TE0M");
+      assert.equal(doubleMetaphone("IUM"), 'E0M');
+      assert.equal(doubleMetaphone("IUMT"), "E0MT");
+    });
+    it("should tansform IU's followed by S into E0's", () => {
+      assert.equal(doubleMetaphone("TIUS"), "TE0S");
+      assert.equal(doubleMetaphone("IUS"), 'E0S');
+      assert.equal(doubleMetaphone("IUST"), "E0ST");
+    });
+    it("should tansform IU's proceeded by an L into 0's", () => {
+      assert.equal(doubleMetaphone("TLIU"), "TL0");
+      assert.equal(doubleMetaphone("LIU"), 'L0');
+      assert.equal(doubleMetaphone("LIUT"), "L0T");
+    });
+    it("should tansform IU's proceeded by a J into 0's", () => {
+      // assert.equal(doubleMetaphone("TJIU"), "TJ0"); /////////Needs a check
+      assert.equal(doubleMetaphone("JIU"), 'J0')
+      assert.equal(doubleMetaphone("JIUT"), "J0T");
+    });
+    it("should tansform trailing I's to E ", () => {
+      assert.equal(doubleMetaphone("TI"), "TE");
+    });
+    it("should make ICH into ICH ", () => {
+      assert.equal(doubleMetaphone("TICHT"), "TIKT");
+    });
+  });
+  // O transforms
+  describe("O vowel Transforms", () => {
+    it("should tansform OA's into O", () => {
+      assert.equal(doubleMetaphone("TOA"), "TO");
+      assert.equal(doubleMetaphone("OA"), 'O');
+      assert.equal(doubleMetaphone("OAT"), "OT");
+    });
+    it("should tansform OE's into O", () => {
+      assert.equal(doubleMetaphone("TOE"), "TO");
+      assert.equal(doubleMetaphone("OE"), 'O');
+      assert.equal(doubleMetaphone("OET"), "OT");
+    });
+    it("should tansform OI's into OE", () => {
+      assert.equal(doubleMetaphone("TOI"), "TOE");
+      assert.equal(doubleMetaphone("OI"), 'OE');
+      assert.equal(doubleMetaphone("OIT"), "OET");
+    });
+    it("should tansform OO's into 0", () => {
+      assert.equal(doubleMetaphone("TOO"), "T0");
+      assert.equal(doubleMetaphone("OO"), '0');
+      assert.equal(doubleMetaphone("OOT"), "0T");
+    });
+    it("should tansform OU's into 0", () => {
+      assert.equal(doubleMetaphone("TOU"), "T0");
+      assert.equal(doubleMetaphone("OU"), '0');
+      assert.equal(doubleMetaphone("OUT"), "0T");
+    });
+    it("should tansform OY's into OY", () => {
+      assert.equal(doubleMetaphone("TOY"), "TOY");
+      assert.equal(doubleMetaphone("OY"), 'OY');
+      assert.equal(doubleMetaphone("OYT"), "OYT");
+    });
+    it("should tansform O's into 0", () => {
+      assert.equal(doubleMetaphone("TO"), "T0");
+      assert.equal(doubleMetaphone("O"), '0');
+      assert.equal(doubleMetaphone("OT"), "0T");
+    });
+  });
+  // U vowel Transforms
+  describe("U vowel Transforms", () => {
+    it("should tansform UA's into 0", () => {
+      assert.equal(doubleMetaphone("TUA"), "T0", "T0");
+      assert.equal(doubleMetaphone("UA"), '0', '0');
+      assert.equal(doubleMetaphone("UAT"), "0T", "0T");
+    });
+    it("should tansform UE's into U", () => {
+      assert.equal(doubleMetaphone("TUE"), "TU", "TU");
+      assert.equal(doubleMetaphone("UE"), 'U', 'U');
+      assert.equal(doubleMetaphone("UET"), "UT", "UT");
+    });
+    it("should tansform UI's into 0", () => {
+      assert.equal(doubleMetaphone("TUI"), "T0");
+      assert.equal(doubleMetaphone("UI"), '0');
+      assert.equal(doubleMetaphone("UIT"), "0T");
+    });
+    it("should tansform U0's into 0", () => {
+      assert.equal(doubleMetaphone("TUO"), "T0");
+      assert.equal(doubleMetaphone("UO"), '0');
+      assert.equal(doubleMetaphone("UOT"), "0T");
+    });
+    it("should tansform UU's into U", () => {
+      assert.equal(doubleMetaphone("TUU"), "TU");
+      assert.equal(doubleMetaphone("UU"), 'U');
+      assert.equal(doubleMetaphone("UUT"), "UT");
+    });
+    it("should tansform UY's into I", () => {
+      assert.equal(doubleMetaphone("TUY"), "TI");
+      assert.equal(doubleMetaphone("UY"), 'I');
+      assert.equal(doubleMetaphone("UYT"), "IT");
+    });
+    it("should tansform U's into 0", () => {
+      assert.equal(doubleMetaphone("TU"), "T0");
+      assert.equal(doubleMetaphone("U"), '0');
+      assert.equal(doubleMetaphone("UT"), "0T");
+    });
+    it("should tansform UGH's into U", () => {
+      assert.equal(doubleMetaphone("TUGH"), "TU");
+      assert.equal(doubleMetaphone("UGH"), 'U');
+      assert.equal(doubleMetaphone("UGHT"), "UT");
+    });
+    it("should not tansform OUGH's into U", () => {
+      assert.equal(doubleMetaphone("TOUGH"), "T0F");
+    });
+    // Q transformes
+    it("should tansform --QUE's into KWU", () => {
+      assert.equal(doubleMetaphone("QUE"), 'KU');
+      assert.equal(doubleMetaphone("TQUE"), "TKU"); //// need to fix
+    });
+    it("should tansform QUE--'s into KW", () => {
+      assert.equal(doubleMetaphone("TQUET"), "TKT"); //// need to fix
+    });
+  });
+  // Y vowel Transforms
+  describe("Y as a vowel transforms", () => {
+    it("should tansform YA's into 10", () => {
+      assert.equal(doubleMetaphone("TYA"), "T10");
+      assert.equal(doubleMetaphone("YA"), '10');
+      assert.equal(doubleMetaphone("YAT"), "10T");
+    });
+    it("should tansform YE's into 1E", () => {
+      assert.equal(doubleMetaphone("TYE"), "T1E");
+      assert.equal(doubleMetaphone("YE"), '1E');
+      assert.equal(doubleMetaphone("YET"), "1ET");
+    });
+    it("should tansform YI's into 11", () => {
+      assert.equal(doubleMetaphone("TYI"), "T11");
+      assert.equal(doubleMetaphone("YI"), '11');
+      assert.equal(doubleMetaphone("YIT"), "11T");
+    });
+    it("should tansform YO's into 10", () => {
+      assert.equal(doubleMetaphone("TYO"), "T1O");
+      assert.equal(doubleMetaphone("YO"), '1O');
+      assert.equal(doubleMetaphone("YOT"), "1OT");
+    });
+    it("should tansform YU's into U", () => {
+      assert.equal(doubleMetaphone("TYU"), "TU");
+      assert.equal(doubleMetaphone("YU"), 'U');
+      assert.equal(doubleMetaphone("YUT"), "UT");
+    });
+    it("should tansform Y's into 1, unless is at end of word then transform to E", () => {
+      assert.equal(doubleMetaphone("TY"), "TE");
+      assert.equal(doubleMetaphone("Y"), 'E');
+      assert.equal(doubleMetaphone("YT"), "1T");
+    });
+  });
 });
 
-/*
- * Tests that this module returns the same results
- * as Natural.
- *
- * Source:
- *   https://github.com/NaturalNode/natural
- */
-
-describe('Compatibility with Natural', function () {
-    var fixtures;
-
-    fixtures = {
-        'complete': ['KMPLT', 'KMPLT'],
-        'Matrix': ['MTRKS', 'MTRKS'],
-        'appropriate': ['APRPRT', 'APRPRT'],
-        'intervention': ['ANTRFNXN', 'ANTRFNXN'],
-        'Français': ['FRNS', 'FRNSS']
-    };
-
-    Object.keys(fixtures).forEach(function (fixture) {
-        var result;
-
-        result = fixtures[fixture];
-
-        it('should process `' + fixture + '` to `' + result[0] + '` and `' +
-            result[1] + '`', function () {
-                var phonetics;
-
-                phonetics = doubleMetaphone(fixture);
-
-                assert(phonetics[0] === result[0]);
-                assert(phonetics[1] === result[1]);
-            }
-        );
+  /////***Consonant Tests***\\\\\
+describe("doubleMetaphone(value) for consonants", () => {
+  describe("B transforms", () => {
+    it("should tansform B's into P", () => {
+      assert.equal(doubleMetaphone("TB"), "TP");
+      assert.equal(doubleMetaphone("B"), 'P');
+      assert.equal(doubleMetaphone("BT"), "PT");
     });
-});
+    it("should tansform BB's into P", () => {
+      assert.equal(doubleMetaphone("TBB"), "TP");
+      assert.equal(doubleMetaphone("BB"), 'P');
+      assert.equal(doubleMetaphone("BBT"), "PT");
+    });
+  });
+  describe("C Transforms", () => {
+    describe("Germanic ACH transforms", () => {
+      it("should make ACH into 0K", () => {
+        assert.equal(doubleMetaphone("ACHT"), "0KT");
+        assert.equal(doubleMetaphone("TACHT"), "T0KT");
+        assert.equal(doubleMetaphone("AACHT"), "0KT");
+        assert.equal(doubleMetaphone("ACHT"), "0KT");
+        assert.equal(doubleMetaphone("MACHER"), "M0X1R");
+        assert.equal(doubleMetaphone("BACHER"), "P0X1R");
+      });
+    }); //end Germanic
+    describe("Special case for Gaius Julius Caesar", () => {
+      it("should account for special case of the emeperor", () => {
+        assert.equal(doubleMetaphone("CAESAR"), "SAS0R");
+      });
+    }); //end ceasar specail case
+    describe("Special Case for Italian roots", () => {
+      it("should make the CH in chianti into a K", () => {
+        assert.equal(doubleMetaphone("CHIANTI"), "KINTE");
+      });
+    }); //end of itatian root leading ch
+    describe("Words liks Michael", () => {
+      it("should make ICH into IK", () => {
+        assert.equal(doubleMetaphone("MICHAEL"), "MIKAL");
+      });
+    }); //end of Michael test
+    describe("Green starting CH", () => {
+      it("should account for greek roots starting with CH", () => {
+        assert.equal(doubleMetaphone("CHIA"), "KI");
+        assert.equal(doubleMetaphone("CHEM"), "K1M");
+        assert.equal(doubleMetaphone("CHORUS"), "K0R0S");
+        assert.equal(doubleMetaphone("CHY"), "XE");
+        assert.equal(doubleMetaphone("CHYM"), "K1M");
+        assert.equal(doubleMetaphone("CHA"), "X0");
+        assert.equal(doubleMetaphone("CHARAC"), "K0R0K");
+        assert.equal(doubleMetaphone("CHARIS"), "K0R1S");
+      });
+    }); // end greek CH tests
+    describe("should account for GERMAN and GREEK CH not at the start of strings", () => {
+      it("should detect the SCH in germanic words and replace CH with X", () => {
+        assert.equal(doubleMetaphone("SCHIMY"), "X1ME");
+      });
+      it("should sccount for greek CHs not at the front of string", () => {
+        assert.equal(doubleMetaphone("ORCHID"), "0RK1T");
+        assert.equal(doubleMetaphone("ORCHES"), "0RK1S");
+        assert.equal(doubleMetaphone("ARCHITECT"), "0RK1T1KT");
+      });
+    });
+    describe("Scottish MC", () => {
+      it("should make leading MC into MK", () => {
+        assert.equal(doubleMetaphone("MC"), "MK");
+        assert.equal(doubleMetaphone("TMCT"), "TMKT");
+        assert.equal(doubleMetaphone("MCH"), "MK");
+        assert.equal(doubleMetaphone("MCHT"), "MKT");
+        assert.equal(doubleMetaphone("TMCHT"), "TMKT");
+      });
+    });
+    describe("CZ transforms", () => {
+      it("should CZ into Z if at beginning fo the word", () => {
+        assert.equal(doubleMetaphone("CZERKA"), "S1RK0");
+      });
+      it("should make WICZ into ", () => {
+        assert.equal(doubleMetaphone("TWICZ"), "TTS");
+      });
+    });
+    describe("CC transforms", () => {
+      it("should make CCIA into XI0", () => {
+        assert.equal(doubleMetaphone("TCCIA"), "TX0");
+        assert.equal(doubleMetaphone("TCCIAT"), "TX0T");
+      });
+      it("should make MCCA into MKK0", () => {
+        assert.equal(doubleMetaphone("MCCAT"), "MKK0T");
+      });
+      it("should make other itatian CCs into an X", () => {
+        assert.equal(doubleMetaphone("TCCIT"), "TX1T");
+        assert.equal(doubleMetaphone("TCCHT"), "TXT");
+        assert.equal(doubleMetaphone("TCCET"), "TX1T");
+        assert.equal(doubleMetaphone("TCCHUT"), "TK0T");
+      });
+    });
+    describe("change non italian CC's to SK", () => {
+      it("should change SUCCT into S0SKT etc", () => {
+        assert.equal(doubleMetaphone("ACCOUNT"), "0K0NT");
+        assert.equal(doubleMetaphone("ACCIT"), "0KS1T");
+        assert.equal(doubleMetaphone("SUCCT"), "S0KT");
+        assert.equal(doubleMetaphone("SUCCES"), "S0KS1S");
+        assert.equal(doubleMetaphone("SUCCEED"), "S0KSET");
+      });
+    });
+    describe("Italian CCI", () => {
+      it("should change --CCI to ---XI", () => {
+        assert.equal(doubleMetaphone("CCI"), "XE");
+      });
+    });
+    describe("Common Consonant pairs starting with C", () => {
+      it("should make CG into K", () => {
+        assert.equal(doubleMetaphone("CGI"), "KE")
+      });
+      it("should make CK into K", () => {
+        assert.equal(doubleMetaphone("CKI"), "KE")
+      });
+      it("should make CQ into K", () => {
+        assert.equal(doubleMetaphone("CQI"), "KE")
+      });
+    });
+  }); //C transforms
+  describe("D Transforms", () => {
+    describe("--DG-- Transforms", () => {
+      it("should make --DGE into TJ", () => {
+        assert.equal(doubleMetaphone("TDGE"), "TJ");
+      });
+      it("should make --DGI into TJ", () => {
+        assert.equal(doubleMetaphone("TDGI"), "TJ");
+      });
+      it("should make --DGA into --TKA", () => {
+        assert.equal(doubleMetaphone("EDGAR"), "1TK0R");
+      });
+      it("should make --DGA into --TKA", () => {
+        assert.equal(doubleMetaphone("EDGTR"), "1TKTR");
+      });
+    });
+    describe("--DT-- or --DD-- into T", () => {
+      it("should make DD into T", () => {
+        assert.equal(doubleMetaphone("EDDTR"), "1TTR");
+      });
+      it("should make DT into T", () => {
+        assert.equal(doubleMetaphone("EDTR"), "1TR");
+      });
+    });
+    describe("lone D transforms", () => {
+      it("should make D into T", () => {
+        assert.equal(doubleMetaphone("D"), "T");
+        assert.equal(doubleMetaphone("QD"), "KT");
+        assert.equal(doubleMetaphone("DQ"), "TK");
+      });
+    });
+  });
+  describe("F transforms", () => {
+    it("should may F into F", () => {
+      assert.equal(doubleMetaphone("F"), "F");
+      assert.equal(doubleMetaphone("TF"), "TF");
+      assert.equal(doubleMetaphone("FT"), "FT");
+    });
+    it("should may FF into F", () => {
+      assert.equal(doubleMetaphone("F"), "F");
+    });
+  });
+  describe("G Transforms", () => {
+    describe("if GH and not proceeded by a vowel or at start of word", () => {
+      it("should make GHs into K", () => {
+        assert.equal(doubleMetaphone("TGHT"), "TKT");
+        assert.equal(doubleMetaphone("TIGHT"), 'TIT');
+        assert.equal(doubleMetaphone("GHT"), "KT");
+        assert.equal(doubleMetaphone("GHAT"), "K0T");
+      });
+    });
+    describe("G.I is at the start is should become a J otherwise K", () => {
+      it("should make GHIT", () => {
+        assert.equal(doubleMetaphone("GHIT"), "JIT");
+      });
+      it("should make IGHIT", () => {
+        assert.equal(doubleMetaphone("IGHIT"), "IIT");
+      });
+      it("should make IGHT", () => {
+        assert.equal(doubleMetaphone("IGHT"), "IT");
+      });
+      it("should make GHT", () => {
+        assert.equal(doubleMetaphone("GHT"), "KT");
+      });
+    });
+    describe("Parker's rule G tests", () => {
+      describe("[BHD]UGH drops the GH", () => {
+        it("should make BUGH into PU", () => {
+          assert.equal(doubleMetaphone("BUGH"), "PU");
+        });
+        it("should make HUGH into HU", () => {
+          assert.equal(doubleMetaphone("HUGH"), "HU");
+        });
+        it("should make DUGH into TU", () => {
+          assert.equal(doubleMetaphone("DUGH"), "TU");
+        });
+      });
+      describe("[BHD]OUGH drops the GH", () => {
+        it("should make BUGH into P0", () => {
+          assert.equal(doubleMetaphone("BOUGH"), "P0");
+        });
+        it("should make HUGH into H0", () => {
+          assert.equal(doubleMetaphone("HOUGH"), "H0");
+        });
+        it("should make DUGH into T0", () => {
+          assert.equal(doubleMetaphone("DOUGH"), "T0");
+        });
+      });
+      describe("[BHD]ROUGH drops the GH", () => {
+        it("should make BUGH into PR0", () => {
+          assert.equal(doubleMetaphone("BROUGH"), "PR0");
+        });
+        it("should make HUGH into R0", () => {
+          assert.equal(doubleMetaphone("HROUGH"), "R0");
+        });
+      });
+    });
+    describe("G for F rule", () => {
+      describe("AUGH endings", () => {
+        it("should make the GH into an F", () => {
+          assert.equal(doubleMetaphone("LAUGH"), "L0F");
+        });
+      });
+      describe("OUGH endings", () => {
+        it("should make the GH into an F", () => {
+          assert.equal(doubleMetaphone("TOUGH"), "T0F");
+        });
+      });
+    });//end parkers rule for G
+    describe("GN TO N", () => {
+      it("should make GN at the beginning of a word into N", () => {
+        assert.equal(doubleMetaphone("GNAT"), "N0T");
+      });
+      it("should make GN after a Vowel into N", () => {
+        assert.equal(doubleMetaphone("SIGN"), "SIN");
+      });
+    });
+    describe("--GNEY words", () => {
+      it("should make CAGNEY into K0KNE", () => {
+        assert.equal(doubleMetaphone("CAGNEY"), "K0KNE");
+        assert.equal(doubleMetaphone("TGNEY"), "TKNE");
+      });
+    });
+    describe("Words like GYM", () => {
+      it("should make GYM into J1M", () => {
+        assert.equal(doubleMetaphone("GYM"), "J1M");
+      });
+    });
+    describe("Other Language Gs", () => {
+      it ("should make G's into Js and Ks", () => {
+        assert.equal(doubleMetaphone("BIAGGI"), "PI0JE");
+        assert.equal(doubleMetaphone("TGIER"), "TJ1R");
+        assert.equal(doubleMetaphone("GET"), "K1T");
+        assert.equal(doubleMetaphone("GETTING"), "K1T1NK");
+      });
+    });
+    describe("GG to K", () => {
+      it("should make GG into K", () => {
+        assert.equal(doubleMetaphone("GG"), "K");
+      });
+    });
+    describe("G to K", () => {
+      it("should make Gs into Ks", () => {
+        assert.equal(doubleMetaphone("G"), "K");
+        assert.equal(doubleMetaphone("TG"), "TK");
+        assert.equal(doubleMetaphone("GT"), "KT");
+      });
+    });
+  });//end of G block
+  describe("H transforms", () => {
+    it("should keep Hs the beginning of a word followed by a vowel", () => {
+      assert.equal(doubleMetaphone("HAT"), "H0T");
+      assert.equal(doubleMetaphone("HTAT"), "T0T");
+    });
+    it("should keep Hs between two vowels but not consonants", () => {
+      assert.equal(doubleMetaphone("IHAT"), "1H0T");
+      assert.equal(doubleMetaphone("THTAT"), "2T0T");
+    });
+  }); //end H tests
+  describe("J transforms", () => {
+    it("should make JOSE into  H0S", () => {
+      assert.equal(doubleMetaphone("JOSE"), "HOS");
+    });
+    it("should make JOSE H0S", () => {
+      assert.equal(doubleMetaphone("JOSE"), "HOS");
+    });
+  });
+  describe("K transforms", () => {
+    it("should make K into K", () => {
+      assert.equal(doubleMetaphone("TK"), 'TK');
+      assert.equal(doubleMetaphone("K"), 'K');
+      assert.equal(doubleMetaphone("KT"), 'KT');
+    });
+    it("should make KK into K", () => {
+      assert.equal(doubleMetaphone("TKK"), 'TK');
+      assert.equal(doubleMetaphone("KK"), 'K');
+      assert.equal(doubleMetaphone("KKT"), 'KT');
+    });
+  });
+  describe("L transforms", () => {
+    it("should make LL into L", () => {
+      assert.equal(doubleMetaphone("LL"), 'L');
+      assert.equal(doubleMetaphone("TLL"), 'TL');
+      assert.equal(doubleMetaphone("LLT"), 'LT');
+      assert.equal(doubleMetaphone("TLLT"), 'TLT');
+      assert.equal(doubleMetaphone("ALLA"), '0L0');
+    });
+  });
+  describe("M transforms", () => {
+    describe("-UMB to UB", () => {
+      it("should make DUMB info T0M", () => {
+        assert.equal(doubleMetaphone("DUMB"), "T0M");
+        assert.equal(doubleMetaphone("THUMB"), "20M");
+      });
+    });
+    describe("MM to M", () => {
+      it("should make TOMM info T0M", () => {
+        assert.equal(doubleMetaphone("TOMM"), "T0M");
+      });
+    });
+  });
+  describe("N Transforms", () => {
+    it("should make TONN info T0N", () => {
+      assert.equal(doubleMetaphone("TONN"), "T0N");
+    });
+    it("should make N into N", () => {
+      assert.equal(doubleMetaphone("TN"), "TN");
+      assert.equal(doubleMetaphone("N"), "N");
+      assert.equal(doubleMetaphone("NT"), "NT");
+    });
+  });
+  describe("P Transforms", () => {
+    describe("PH to F", () => {
+      it("should make PH into F", () => {
+        assert.equal(doubleMetaphone("TPH"), "TF");
+        assert.equal(doubleMetaphone("PH"), "F");
+        assert.equal(doubleMetaphone("PHT"), "FT");
+      });
+    });
+    describe("PP to P", () => {
+      it("should make PP to P", () => {
+        assert.equal(doubleMetaphone("TPP"), "TP");
+        assert.equal(doubleMetaphone("PP"), "P");
+        assert.equal(doubleMetaphone("PPT"), "PT");
+      });
+    });
+    describe("P to P", () => {
+      it("should make P into P", () => {
+        assert.equal(doubleMetaphone("TP"), "TP");
+        assert.equal(doubleMetaphone("P"), "P");
+        assert.equal(doubleMetaphone("PT"), "PT");
+      });
+    });
+    describe("Special cases of P--", () => {
+      it("should make PB into B", () => {
+        assert.equal(doubleMetaphone("CAMPBELL"), "K0MP1L");
+        assert.equal(doubleMetaphone("RASPBERRY"), "R0SP1RE");
+      });
+    });
+  });
+  describe("Q transforms", () => {
+    it("should make Q into K", () => {
+      assert.equal(doubleMetaphone("TQ"), "TK");
+      assert.equal(doubleMetaphone("Q"), "K");
+      assert.equal(doubleMetaphone("QT"), "KT");
+    });
+  });
+  describe("R transforms", () => {
+    it("should make RR into R", () => {
+      assert.equal(doubleMetaphone("RR"), "R");
+      assert.equal(doubleMetaphone("TRR"), "TR");
+      assert.equal(doubleMetaphone("RRT"), "RT");
+    });
+    it("should make R into R", () => {
+      assert.equal(doubleMetaphone("R"), "R");
+      assert.equal(doubleMetaphone("TR"), "TR");
+      assert.equal(doubleMetaphone("RT"), "RT");
+    });
+  });
+  describe("S Transforms", () => {
+    describe("Silent S following I or Y should be removed if preceeding an L", () => {
+      it("should make ISLAND into IL0NT", () => {
+        assert.equal(doubleMetaphone("ISLAND"), "IL0NT");
+      });
+      it("should make IYLAND into IL0NT", () => {
+        assert.equal(doubleMetaphone("ISLAND"), "IL0NT");
+      });
+      it("should make AISLE into AIL", () => {
+        assert.equal(doubleMetaphone("AISLE"), "IL");
+      });
+    });
+    describe("shoudl count for special case SUGAR--", () => {
+      it("should make SUGARMOMMA into X0K0RM0M0", () => {
+        assert.equal(doubleMetaphone("SUGARMOMMA"), "X0K0RM0M0");
+      });
+    });
+    describe("SH Strings", () => {
+      it("should make english SH into a X", () => {
+        assert.equal(doubleMetaphone("ENGLISH"), "1NKL1X");
+        assert.equal(doubleMetaphone("SHOUT"), "X0T");
+      });
+      it("should make germanic SH into a X", () => {
+        assert.equal(doubleMetaphone("SHEIM"), "SEM");
+        assert.equal(doubleMetaphone("SHOEK"), "SOK");
+        assert.equal(doubleMetaphone("SHOLM"), "S0LM");
+        assert.equal(doubleMetaphone("SHOLZ"), "S0LS");
+      });
+    });
+    describe("S[VOWEL]", () => {
+      it("should make SIO into SI0", () => {
+        assert.equal(doubleMetaphone("SIOT"), "S0T");
+      });
+      it("should make SIA into SI0", () => {
+        assert.equal(doubleMetaphone("SIAT"), "SI0T");
+      });
+    });
+    describe("Germanic and Slavic S+Consonant", () => {
+      it("should make SZEET to SET", () => {
+        assert.equal(doubleMetaphone("SZEET"), "SET");
+      });
+      it("should make TSZEET to TSET", () => {
+        assert.equal(doubleMetaphone("TSZEET"), "TSET");
+      });
+      it("should make SLEET to SET", () => {
+        assert.equal(doubleMetaphone("SLEET"), "SLET");
+      });
+      it("should make SMEET to SET", () => {
+        assert.equal(doubleMetaphone("SMEET"), "SMET");
+      });
+      it("should make SNEET to SET", () => {
+        assert.equal(doubleMetaphone("SNEET"), "SNET");
+      });
+      it("should make SWEET to SET", () => {
+        assert.equal(doubleMetaphone("SWEET"), "SWET");
+      });
+    });
+    describe("SC--", () => {
+      describe("SCH--", () => {
+        it("should make sch with dutch origin into X", () => {
+          assert.equal(doubleMetaphone("SCHERMERHORN"), "X1RM1R0RN");
+          assert.equal(doubleMetaphone("SCHENKER"), "X1NK1R");
+          assert.equal(doubleMetaphone("SCHAL"), "X0L");
+        });
+        it("should make sch with no dutch origin into SK", () => {
+          assert.equal(doubleMetaphone("SCHOOL"), "SK0L");
+        });
+      });
+      describe("SC[IEY]", () => {
+        it("should make SCIT int S1T", () => {
+          assert.equal(doubleMetaphone("SCIT"), "S1T");
+        });
+        it("should make SCET int S1T", () => {
+          assert.equal(doubleMetaphone("SCET"), "S1T");
+        });
+        it("should make SCYT int S1T", () => {
+          assert.equal(doubleMetaphone("SCYT"), "S1T");
+        });
+      });
+      describe("SC-- to SK otherwise", () => {
+        it("should make SCAT into SK0T", () => {
+          assert.equal(doubleMetaphone("SCAT"), "SK0T");
+          assert.equal(doubleMetaphone("TSCAT"), "TSK0T");
+          assert.equal(doubleMetaphone("SCT"), "SKT");
+        });
+      });
+    });
+    it("should make S into S", () => {
+      assert.equal(doubleMetaphone("ST"), "ST");
+      assert.equal(doubleMetaphone("S"), "S");
+      assert.equal(doubleMetaphone("TS"), "TS");
+    });
+    it("should make SS into S", () => {
+      assert.equal(doubleMetaphone("SST"), "ST");
+      assert.equal(doubleMetaphone("SS"), "S");
+      assert.equal(doubleMetaphone("TSS"), "TS");
+    });
+  });
+  describe("T Transforms", () => {
+    it("Should Mat --TION-- int X", () => {
+      assert.equal(doubleMetaphone("TION"), "XN");
+      assert.equal(doubleMetaphone("ATION"), "0XN");
+      assert.equal(doubleMetaphone("TIONT"), "XNT");
+    });
+    it("Should Mat CATCH int K0X", () => {
+      assert.equal(doubleMetaphone("CATCH"), "K0X");
+    });
+    it("should handle THOMAS to T0M0S", () => {
+      assert.equal(doubleMetaphone("THOMAS"), "T0M0S");
+    });
+    it("should handle THAMES to T0M1S", () => {
+      assert.equal(doubleMetaphone("THAMES"), "TAMS");
+    });
+    it("Should make TD into T", () => {
+      assert.equal(doubleMetaphone("HOTDOG"), "H0T0K");
+    });
+    it("Should make TT into T", () => {
+      assert.equal(doubleMetaphone("HATT"), "H0T");
+      assert.equal(doubleMetaphone("TTAH"), "T0");
+      assert.equal(doubleMetaphone("TT"), 'T');
+    });
+  });
+  describe("V transforms", () => {
+    it("Should make V into F", () => {
+      assert.equal(doubleMetaphone("VT"), "FT");
+      assert.equal(doubleMetaphone("V"), "F");
+      assert.equal(doubleMetaphone("TV"), "TF");
+    });
+    it("Should make VV into F", () => {
+      assert.equal(doubleMetaphone("VVT"), "FT");
+      assert.equal(doubleMetaphone("VV"), "F");
+      assert.equal(doubleMetaphone("TVV"), "TF");
+    });
+  });
+  describe("W Transfroms", () => {
+    describe("Silent Ws", () => {
+      it("should make WR into R", () => {
+        assert.equal(doubleMetaphone("WREN"), "R1N");
+        assert.equal(doubleMetaphone("WRAP"), "R0P");
+        assert.equal(doubleMetaphone("TWRAP"), "TR0P");
+      });
+    });
+    it("Should test the W in Polish words liek Filipowicz", () => {
+      assert.equal(doubleMetaphone("Filipowicz"), "F1L1P0TS");
+    });
+  });
+  describe("X Transfroms", () => {
+    it("should make French AUX into ", () => {
+      assert.equal(doubleMetaphone("AUXILIARY"), "0KS1LI0RE");
+      assert.equal(doubleMetaphone("FAUX"), "FO");
+      assert.equal(doubleMetaphone("BREAUX"), "PR1O");
+    });
+    it("X transforms", () => {
+      assert.equal(doubleMetaphone("EXCITE"), "1KSIT");
+      assert.equal(doubleMetaphone("EXXITE"), "1KSIT");
+      assert.equal(doubleMetaphone("EX"), "1KS");
+    });
+  });
+  describe("Z Transforms", () => {
+    it("should make the Chinese ZH into J", () => {
+      assert.equal(doubleMetaphone("ZHOU"), "J0");
+    });
+    it("should make ZZ into S", () => {
+      assert.equal(doubleMetaphone("ZZ"), "S");
+      assert.equal(doubleMetaphone("TZZ"), "TS");
+      assert.equal(doubleMetaphone("ZZT"), "ST");
+    });
+    it("should make Z into S", () => {
+      assert.equal(doubleMetaphone("Z"), "S");
+      assert.equal(doubleMetaphone("TZ"), "TS");
+      assert.equal(doubleMetaphone("ZT"), "ST");
+    });
+  });
+  describe.skip("Long word Demonstrations", () => {
+    it("should fail 1 'LIMINAL'", () => {
+      assert.equal(doubleMetaphone("LIMINAL"), 1);
+    });
+    it("should fail 2 'OPERATIC'", () => {
+      assert.equal(doubleMetaphone("OPERATIC"), 1);
+    });
+    it("should fail 3 'GREGARIOUS'", () => {
+      assert.equal(doubleMetaphone("GREGARIOUS"), 1);
+    });
+    it("should fail 4 'FELONIOUS'", () => {
+      assert.equal(doubleMetaphone("FELONIOUS"), 1);
+    });
+    it("should fail 5 'PREIPHERY'", () => {
+      assert.equal(doubleMetaphone("PERIPHERY"), 1);
+    });
+    it("should fail 6 'GARAGE'", () => {
+      assert.equal(doubleMetaphone("GARAGE"), 1);
+    });
+    it("should fail 7 'LIEUTENANT'", () => {
+      assert.equal(doubleMetaphone("LIEUTENANT"), 1);
+    });
+    it("should fail 8 'SANGUINE'", () => {
+      assert.equal(doubleMetaphone("SANGUINE"), 1);
+    });
+    it("should fail 9 'CADMIUM'", () => {
+      assert.equal(doubleMetaphone("CADMIUM"), 1);
+    });
+    it("should fail 10 'THE'", () => {
+      assert.equal(doubleMetaphone("THE"), 1);
+    });
+    it("should fail 11 'DAMN'", () => { ////////////Need a fix for MN
+      assert.equal(doubleMetaphone("DAMN"), 1);
+    });
+    it("should fail 12 'WE'", () => { ////////////Need a fix for MN
+      assert.equal(doubleMetaphone("WE"), 1);
+    });
+    it("should fail 13 'TE'", () => { ////////////Need a fix for MN
+      assert.equal(doubleMetaphone("WE"), 1);
+    });
+    it("should fail 14 'SE'", () => { ////////////Need a fix for MN
+      assert.equal(doubleMetaphone("WE"), 1);
+    });
+  });
+});// Main describe block

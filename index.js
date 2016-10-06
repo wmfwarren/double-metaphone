@@ -20,7 +20,8 @@ var VOWELS,
  * Match vowels (including `Y`).
  */
 
-VOWELS = /[AEIOUY]/;
+VOWELS = /[AEIOUY01]/;
+const CONSONANTS = /[BCDFGHJKLMNPQRSTVWXZ]/;
 
 /*
  * Match few Slavo-Germanic values.
@@ -32,7 +33,8 @@ SLAVO_GERMANIC = /W|K|CZ|WITZ/;
  * Match few Germanic values.
  */
 
-GERMANIC = /^(VAN |VON |SCH)/;
+// GERMANIC = /^(VAN |VON |SCH)/;
+GERMANIC = /^SCH/;
 
 /*
  * Match initial values of which the first character
@@ -127,7 +129,7 @@ function doubleMetaphone(value) {
         index = 0,
         length = value.length,
         last = length - 1,
-        isSlavoGermanic, isGermanic, subvalue, next, prev, nextnext,
+        isSlavoGermanic, isGermanic, subvalue, next, prev, nextnext, prevprev,
         characters;
 
     value = String(value).toUpperCase() + '     ';
@@ -153,35 +155,312 @@ function doubleMetaphone(value) {
 
         index++;
     }
+    // Soft /AOU/ adds a  0 to the string
+    // Soft /IE/ adds a  1 to the string
 
     while (index < length) {
+        prevprev = characters[index - 2];
         prev = characters[index - 1];
         next = characters[index + 1];
         nextnext = characters[index + 2];
 
         switch (characters[index]) {
             case 'A':
-            case 'E':
-            case 'I':
-            case 'O':
-            case 'U':
-            case 'Y':
-            case 'À':
-            case 'Ê':
-            case 'É':
-            case 'É':
-                if (index === 0) {
-                    /*
-                     * All initial vowels now map to `A`.
-                     */
-
-                    primary += 'A';
-                    secondary += 'A';
-                }
-
+              if (CONSONANTS.test(next)
+                && nextnext === 'E'
+                && length > 2
+                && (index === length - 3 || index === length - 4 )) {
+                primary += 'A';
+                secondary += 'A';
                 index++;
-
-                break;
+              } else if (index !== 0 && next === "U" && nextnext === "X") {
+                primary += 'O';
+                secondary += 'O';
+                index += 3;
+              } else if (next === 'A') {
+                primary += '0';
+                secondary += '0';
+                index += 2;
+              } else if (next === 'O') {
+                primary += '0';
+                secondary += '0';
+                index += 2;
+              } else if (next === 'E') {
+                primary += 'A';
+                secondary += 'A';
+                index += 2;
+              } else if (next === 'I' && nextnext === "S") {
+                primary += 'I';
+                secondary += 'I';
+                index += 2;
+              } else if (next === 'I') {
+                primary += 'A';
+                secondary += 'A';
+                index += 2;
+              }  else if (next === 'U') {
+                primary += "0";
+                secondary += "0";
+                index += 2;
+              } else if (next === 'Y') {
+                primary += "A";
+                secondary += "A";
+                index += 2;
+              }  else {
+                primary += '0';
+                secondary += '0';
+                index++;
+              }
+              break;
+            case 'E':
+              //for words like HE, WE, BE
+              if (index === last && CONSONANTS.test(prev) && length == 2) {
+                primary += 'E';
+                secondary += 'E';
+                index ++;
+              } else if (index === last && length > 2 ) {
+                index ++;
+              //if the string --[VOWEL][CONSONANT]E[SD] is matched drop the E
+              } else if (index === length - 2 && /[SD]/.test(next) && CONSONANTS.test(prev) && VOWELS.test(prevprev)) {
+                index ++;
+              } else if (CONSONANTS.test(next)
+                && nextnext === 'E'
+                && length > 2
+                && (index === length - 3 || index === length - 4 )) {
+                primary += 'E';
+                secondary += 'E';
+                index++;
+              } else if (next === 'A' && characters[last] !== 'X') {
+                primary += 'E';
+                secondary += 'E';
+                index += 2;
+              } else if (next === 'E') {
+                primary += 'E';
+                secondary += 'E';
+                index += 2;
+              } else if (next === 'I') {
+                primary += 'E';
+                secondary += 'E';
+                index += 2;
+              }  else if (next === 'O') {
+                primary += "EO";
+                secondary += "EO";
+                index += 2;
+              }  else if (index === 0 && next === 'U') {
+                primary += "U";
+                secondary += "U";
+                index += 2;
+              }  else if(next === 'U') {
+                primary += "0";
+                secondary += "0";
+                index += 2;
+              } else if (next === 'Y') {
+                primary += "E";
+                secondary += "E";
+                index += 2;
+              } else {
+                primary += '1';
+                secondary += '1';
+                index++;
+              }
+              break;
+            case 'I':
+             if (prevprev === "C" && prev === "H" && next === "A") {
+                primary += 'I';
+                secondary += 'I';
+                index += 2;
+              } else if (prevprev === "G" && prev === "H") {
+                primary += 'I';
+                secondary += 'I';
+                index++;
+              } else if (next === "G" && nextnext === "H") {
+                primary += 'I';
+                secondary += 'I';
+                index += 3;
+              } else if (next === "G" && nextnext === "N") {
+                primary += 'I';
+                secondary += 'I';
+                index++;
+              } else if (next === 'S' && nextnext === "L") {
+                primary += 'I';
+                secondary += 'I';
+                index++;
+              } else if (CONSONANTS.test(next)
+                && nextnext === 'E'
+                && length > 2
+                && (index === length - 3 || index === length - 4 )) {
+                primary += 'I';
+                secondary += 'I';
+                index++;
+              } else if (next === 'A') {
+                primary += 'I0';
+                secondary += 'I0';
+                index += 2;
+              } else if (next === 'E' && nextnext === "U") {
+                primary += '0';
+                secondary += '0';
+                index += 3;
+              } else if (next === 'E') {
+                primary += 'I';
+                secondary += 'I';
+                index += 2;
+              } else if (next === 'I') {
+                primary += 'I';
+                secondary += 'I';
+                index += 2;
+              }  else if (next === 'O') {
+                primary += "0";
+                secondary += "0";
+                index += 2;
+              } else if ( next === 'U' && /[SM]/.test(nextnext)) {
+                primary += "E0";
+                secondary += "E0";
+                index += 2;
+              } else if ( /[JL]/.test(prev) && next === 'U') {
+                primary += '0';
+                secondary += '0';
+                index += 2;
+              } else if ( next === 'Y') {
+                primary += 'IY';
+                secondary += 'IY';
+                index += 2;
+              } else if ( next === 'C' && nextnext === "H") {
+                primary += 'IK';
+                secondary += 'IK';
+                index += 3;
+              } else if ( (index === (length - 1 )) && !VOWELS.test(next) ) {
+                primary += 'E';
+                secondary += 'E';
+                index++;
+              } else {
+                primary += '1';
+                secondary += '1';
+                index++;
+              }
+              break;
+            case 'O':
+              if (next === 'A') {
+                primary += 'O';
+                secondary += 'O';
+                index += 2;
+              } else if (next === 'E') {
+                primary += 'O';
+                secondary += 'O';
+                index += 2;
+              } else if (next === 'I') {
+                primary += 'OE';
+                secondary += 'OE';
+                index += 2;
+              }  else if (next === 'O') {
+                primary += "0";
+                secondary += "0";
+                index += 2;
+              } else if (next === 'U') {
+                primary += "0";
+                secondary += "0";
+                index += 2;
+              } else if (next === 'Y') {
+                primary += "OY";
+                secondary += "OY";
+                index += 2;
+              } else if (CONSONANTS.test(next)
+                && nextnext === 'E'
+                && length > 2
+                && (index === length - 3 || index === length - 4 )) {
+                primary += 'O';
+                secondary += 'O';
+                index++;
+              } else {
+                primary += "0";
+                secondary += "0";
+                index++;
+              }
+              break;
+            case 'U':
+              if (next === 'A') {
+                primary += '0';
+                secondary += '0';
+                index += 2;
+              } else if (prev === 'Q' && next === 'E' && nextnext === undefined) {
+                primary += 'U';
+                secondary += 'U';
+                index += 2;
+              } else if (prev === 'Q' && next === 'E' && nextnext !== undefined) {
+                primary += '';
+                secondary += '';
+                index += 2;
+              } else if (next === 'E') {
+                primary += 'U';
+                secondary += 'U';
+                index += 2;
+              } else if (next === 'I') {
+                primary += '0';
+                secondary += '0';
+                index += 2;
+              }  else if (next === 'O') {
+                primary += "0";
+                secondary += "0";
+                index += 2;
+              } else if (next === 'U') {
+                primary += "U";
+                secondary += "U";
+                index += 2;
+              }  else if (next === 'Y') {
+                primary += "I";
+                secondary += "I";
+                index += 2;
+              } else if (CONSONANTS.test(next)
+                && nextnext === 'E'
+                && length > 2
+                && (index === length - 3 || index === length - 4 )) {
+                primary += 'U';
+                secondary += 'U';
+                index++;
+              } else if (next === "G" && nextnext === "H" && prev !== "O") {
+                primary += 'U';
+                secondary += 'U';
+                index += 3;
+              } else {
+                primary += "0";
+                secondary += "0";
+                index++;
+              }
+              break;
+            case 'Y':
+              if (index === length -1 ){
+                primary += 'E';
+                secondary += 'E';
+                index += 2;
+              } else if (next === 'S' && nextnext === "L") {
+                primary += 'I';
+                secondary += 'I';
+                index++;
+              } else if (next === 'A') {
+                primary += '10';
+                secondary += '10';
+                index += 2;
+              } else if (next === 'E') {
+                primary += '1E';
+                secondary += '1E';
+                index += 2;
+              } else if (next === 'I') {
+                primary += '11';
+                secondary += '11';
+                index += 2;
+              } else if (next === 'O') {
+                primary += "1O";
+                secondary += "1O";
+                index += 2;
+              } else if (next === 'U') {
+                primary += "U";
+                secondary += "U";
+                index += 2;
+              } else {
+                primary += "1";
+                secondary += "1";
+                index++;
+              }
+              break;
+        //consonants
             case 'B':
                 primary += 'P';
                 secondary += 'P';
@@ -193,18 +472,12 @@ function doubleMetaphone(value) {
                 index++;
 
                 break;
-            case 'Ç':
-                primary += 'S';
-                secondary += 'S';
-                index++;
-
-                break;
             case 'C':
                 /*
                  * Various Germanic:
                  */
 
-                if (prev === 'A' && next === 'H' && nextnext !== 'I' &&
+                if (/[0]/.test(prev) && next === 'H' && !/[1]/.test(nextnext) &&
                     !VOWELS.test(characters[index - 2]) &&
                     (
                         nextnext !== 'E' || (
@@ -230,7 +503,7 @@ function doubleMetaphone(value) {
                 ) {
                     primary += 'S';
                     secondary += 'S';
-                    index += 2;
+                    index++;
 
                     break;
                 }
@@ -393,7 +666,7 @@ function doubleMetaphone(value) {
                             secondary += 'X';
                         }
 
-                        index += 3;
+                        index += 2;
 
                         break;
                     } else {
@@ -421,28 +694,28 @@ function doubleMetaphone(value) {
                  * Italian.
                  */
 
-                if (
-                    next === 'I' &&
-                    /*
-                     * Bug: The original algorithm also calls for A (as
-                     * in CIA), which is already taken care of above.
-                     */
-                    (nextnext === 'E' || nextnext === 'O')
-                ) {
-                    primary += 'S';
-                    secondary += 'X';
-                    index += 2;
+                // if (
+                //     next === 'I' &&
+                //     /*
+                //      * Bug: The original algorithm also calls for A (as
+                //      * in CIA), which is already taken care of above.
+                //      */
+                //     (nextnext === 'E' || nextnext === 'O')
+                // ) {
+                //     primary += 'S';
+                //     secondary += 'X';
+                //     index += 2;
+                //
+                //     break;
+                // }
 
-                    break;
-                }
-
-                if (next === 'I' || next === 'E' || next === 'Y') {
-                    primary += 'S';
-                    secondary += 'S';
-                    index += 2;
-
-                    break;
-                }
+                // if (next === 'I' || next === 'E' || next === 'Y') {
+                //     primary += 'S';
+                //     secondary += 'S';
+                //     index += 2;
+                //
+                //     break;
+                // }
 
                 primary += 'K';
                 secondary += 'K';
@@ -452,17 +725,17 @@ function doubleMetaphone(value) {
                  * `Mac Gregor`.
                  */
 
-                if (
-                    next === ' ' &&
-                    (
-                        nextnext === 'C' ||
-                        nextnext === 'G' ||
-                        nextnext === 'Q'
-                    )
-                ) {
-                    index += 3;
-                    break;
-                }
+                // if (
+                //     next === ' ' &&
+                //     (
+                //         nextnext === 'C' ||
+                //         nextnext === 'G' ||
+                //         nextnext === 'Q'
+                //     )
+                // ) {
+                //     index += 3;
+                //     break;
+                // }
 
                 /*
                  * Bug: Already covered above.
@@ -676,9 +949,9 @@ function doubleMetaphone(value) {
                     index === 0 &&
                     INITIAL_G_FOR_KJ.test(value.slice(1, 3))
                 ) {
-                    primary += 'K';
+                    primary += 'J';
                     secondary += 'J';
-                    index += 2;
+                    index ++;
 
                     break;
                 }
@@ -697,7 +970,7 @@ function doubleMetaphone(value) {
                 ) {
                     primary += 'K';
                     secondary += 'J';
-                    index += 2;
+                    index ++;
 
                     break;
                 }
@@ -723,6 +996,8 @@ function doubleMetaphone(value) {
                     ) {
                         primary += 'K';
                         secondary += 'K';
+                        index ++;
+                        break;
                     } else {
                         /*
                          * Always soft if French ending.
@@ -737,7 +1012,7 @@ function doubleMetaphone(value) {
                         }
                     }
 
-                    index += 2;
+                    index +=2;
 
                     break;
                 }
@@ -760,8 +1035,6 @@ function doubleMetaphone(value) {
                 if (VOWELS.test(next) && (index === 0 || VOWELS.test(prev))) {
                     primary += 'H';
                     secondary += 'H';
-
-                    index++;
                 }
 
                 index++;
@@ -811,25 +1084,25 @@ function doubleMetaphone(value) {
                 /*
                  * Spanish pron. of such as `bajador`.
                  */
-                } else if (
-                    !isSlavoGermanic &&
-                    (next === 'A' || next === 'O') &&
-                    VOWELS.test(prev)
-                ) {
-                    primary += 'J';
-                    secondary += 'H';
-                } else if (index === last) {
-                    primary += 'J';
-                } else if (
-                    prev !== 'S' && prev !== 'K' && prev !== 'L' &&
-                    !J_FOR_J_EXCEPTION.test(next)
-                ) {
-                    primary += 'J';
-                    secondary += 'J';
-                /*
-                 * It could happen.
-                 */
-                } else if (next === 'J') {
+              } // else if (
+                //     !isSlavoGermanic &&
+                //     (next === 'A' || next === 'O') &&
+                //     VOWELS.test(prev)
+                // ) {
+                //     primary += 'J';
+                //     secondary += 'H';
+                // } else if (index === last) {
+                //     primary += 'J';
+                // } else if (
+                //     prev !== 'S' && prev !== 'K' && prev !== 'L' &&
+                //     !J_FOR_J_EXCEPTION.test(next)
+                // ) {
+                //     primary += 'J';
+                //     secondary += 'J';
+                // /*
+                //  * It could happen.
+                //  */
+                else if (next === 'J') {
                     index++;
                 }
 
@@ -847,42 +1120,45 @@ function doubleMetaphone(value) {
 
                 break;
             case 'L':
+                // if (next === 'L') {
+                //     /*
+                //      * Spanish such as `cabrillo`, `gallegos`.
+                //      */
+                //
+                //     if (
+                //         (
+                //             index === length - 3 &&
+                //             (
+                //                 (
+                //                     prev === 'I' &&
+                //                     (nextnext === 'O' || nextnext === 'A')
+                //                 ) ||
+                //                 (
+                //                     prev === 'A' &&
+                //                     nextnext === 'E'
+                //                 )
+                //             )
+                //         ) || (
+                //             prev === 'A' && nextnext === 'E' &&
+                //             (
+                //                 (
+                //                     characters[last] === 'A' ||
+                //                     characters[last] === 'O'
+                //                 ) ||
+                //                 ALLE.test(value.slice(last - 1, length))
+                //             )
+                //         )
+                //     ) {
+                //         primary += '1';
+                //         index += 2;
+                //
+                //         break;
+                //     }
+                //
+                //     index++;
+                // }
                 if (next === 'L') {
-                    /*
-                     * Spanish such as `cabrillo`, `gallegos`.
-                     */
-
-                    if (
-                        (
-                            index === length - 3 &&
-                            (
-                                (
-                                    prev === 'I' &&
-                                    (nextnext === 'O' || nextnext === 'A')
-                                ) ||
-                                (
-                                    prev === 'A' &&
-                                    nextnext === 'E'
-                                )
-                            )
-                        ) || (
-                            prev === 'A' && nextnext === 'E' &&
-                            (
-                                (
-                                    characters[last] === 'A' ||
-                                    characters[last] === 'O'
-                                ) ||
-                                ALLE.test(value.slice(last - 1, length))
-                            )
-                        )
-                    ) {
-                        primary += 'L';
-                        index += 2;
-
-                        break;
-                    }
-
-                    index++;
+                  index ++;
                 }
 
                 primary += 'L';
@@ -924,12 +1200,6 @@ function doubleMetaphone(value) {
                 secondary += 'N';
 
                 break;
-            case 'Ñ':
-                index++;
-                primary += 'N';
-                secondary += 'N';
-
-                break;
             case 'P':
                 if (next === 'H') {
                     primary += 'F';
@@ -960,36 +1230,45 @@ function doubleMetaphone(value) {
                     index++;
                 }
 
-                index++;
+                if(next === 'U' && nextnext === 'E' && index === last -2) {
+                  primary += 'KU';
+                  secondary += 'KU';
+                  index++;
+                  break;
+                }
+
                 primary += 'K';
                 secondary += 'K';
+                index++;
 
                 break;
             case 'R':
                 /*
                  * French such as `Rogier`, but exclude `Hochmeier`.
                  */
+                //
+                // if (
+                //     index === last &&
+                //     !isSlavoGermanic &&
+                //     prev === 'E' &&
+                //     characters[index - 2] === 'I' &&
+                //     characters[index - 4] !== 'M' &&
+                //     (
+                //         characters[index - 3] !== 'E' &&
+                //         characters[index - 3] !== 'A'
+                //     )
+                // ) {
+                //     secondary += 'R';
+                // } else {
 
-                if (
-                    index === last &&
-                    !isSlavoGermanic &&
-                    prev === 'E' &&
-                    characters[index - 2] === 'I' &&
-                    characters[index - 4] !== 'M' &&
-                    (
-                        characters[index - 3] !== 'E' &&
-                        characters[index - 3] !== 'A'
-                    )
-                ) {
-                    secondary += 'R';
-                } else {
-                    primary += 'R';
-                    secondary += 'R';
-                }
+                // }
 
                 if (next === 'R') {
                     index++;
                 }
+
+                primary += 'R';
+                secondary += 'R';
 
                 index++;
 
@@ -1049,7 +1328,7 @@ function doubleMetaphone(value) {
                         secondary += 'S';
                     }
 
-                    index += 3;
+                    index++;
 
                     break;
                 }
@@ -1065,7 +1344,7 @@ function doubleMetaphone(value) {
                     (
                         index === 0 && (
                             next === 'L' || next === 'M' ||
-                            next === 'N' || next === 'W'
+                            next === 'N'
                         )
                     )
                 ) {
@@ -1127,7 +1406,7 @@ function doubleMetaphone(value) {
 
                         break;
                     }
-
+                    //sc--
                     if (
                         nextnext === 'I' ||
                         nextnext === 'E' ||
@@ -1135,13 +1414,13 @@ function doubleMetaphone(value) {
                     ) {
                         primary += 'S';
                         secondary += 'S';
-                        index += 3;
+                        index += 2;
                         break;
                     }
 
                     primary += 'SK';
                     secondary += 'SK';
-                    index += 3;
+                    index += 2;
 
                     break;
                 }
@@ -1226,7 +1505,7 @@ function doubleMetaphone(value) {
                         primary += 'T';
                         secondary += 'T';
                     } else {
-                        primary += '0';
+                        primary += '2';
                         secondary += 'T';
                     }
 
@@ -1268,49 +1547,49 @@ function doubleMetaphone(value) {
                     break;
                 }
 
-                if (index === 0) {
-                    /*
-                     * `Wasserman` should match `Vasserman`.
-                     */
-
-                    if (VOWELS.test(next)) {
-                        primary += 'A';
-                        secondary += 'F';
-                    } else if (next === 'H') {
-                        /*
-                         * Need `Uomo` to match `Womo`.
-                         */
-
-                        primary += 'A';
-                        secondary += 'A';
-                    }
-                }
+                // if (index === 0) {
+                //     /*
+                //      * `Wasserman` should match `Vasserman`.
+                //      */
+                //
+                //     if (VOWELS.test(next)) {
+                //         primary += 'A';
+                //         secondary += 'F';
+                //     } else if (next === 'H') {
+                //         /*
+                //          * Need `Uomo` to match `Womo`.
+                //          */
+                //
+                //         primary += 'A';
+                //         secondary += 'A';
+                //     }
+                // }
 
                 /*
                  * `Arnow` should match `Arnoff`.
                  */
 
-                if (
-                    (
-                        (prev === 'E' || prev === 'O') &&
-                        next === 'S' && nextnext === 'K' &&
-                        (
-                            characters[index + 3] === 'I' ||
-                            characters[index + 3] === 'Y'
-                        )
-                    ) ||
-                    /*
-                     * Maybe a bug? Shouldn't this be general Germanic?
-                     */
-
-                    value.slice(0, 3) === 'SCH' ||
-                    (index === last && VOWELS.test(prev))
-                ) {
-                    secondary += 'F';
-                    index++;
-
-                    break;
-                }
+                // if (
+                //     (
+                //         (prev === 'E' || prev === 'O') &&
+                //         next === 'S' && nextnext === 'K' &&
+                //         (
+                //             characters[index + 3] === 'I' ||
+                //             characters[index + 3] === 'Y'
+                //         )
+                //     ) ||
+                //     /*
+                //      * Maybe a bug? Shouldn't this be general Germanic?
+                //      */
+                //
+                //     value.slice(0, 3) === 'SCH' ||
+                //     (index === last && VOWELS.test(prev))
+                // ) {
+                //     secondary += 'F';
+                //     index++;
+                //
+                //     break;
+                // }
 
                 /*
                  * Polish such as `Filipowicz`.
@@ -1327,7 +1606,8 @@ function doubleMetaphone(value) {
 
                     break;
                 }
-
+                primary += 'W';
+                secondary += 'W';
                 index++;
 
                 break;
@@ -1355,6 +1635,8 @@ function doubleMetaphone(value) {
                 }
 
                 if (next === 'C' || next === 'X') {
+                  primary += 'KS';
+                  secondary += 'KS';
                     index++;
                 }
 
@@ -1372,19 +1654,20 @@ function doubleMetaphone(value) {
                     index += 2;
 
                     break;
-                } else if (
-                    (
-                        next === 'Z' &&
-                        (
-                            nextnext === 'A' || nextnext === 'I' ||
-                            nextnext === 'O'
-                        )
-                    ) ||
-                    (isSlavoGermanic && index > 0 && prev !== 'T')
-                ) {
-                    primary += 'S';
-                    secondary += 'TS';
-                } else {
+                // } else if (
+                //     (
+                //         next === 'Z' &&
+                //         (
+                //             nextnext === 'A' || nextnext === 'I' ||
+                //             nextnext === 'O'
+                //         )
+                //     ) ||
+                //     (isSlavoGermanic && index > 0 && prev !== 'T')
+                // ) {
+                //     primary += 'S';
+                //     secondary += 'TS';
+                // }
+              } else {
                     primary += 'S';
                     secondary += 'S';
                 }
@@ -1402,7 +1685,7 @@ function doubleMetaphone(value) {
         }
     }
 
-    return [primary, secondary];
+    return primary;
 }
 
 /*
