@@ -445,9 +445,6 @@ describe("doubleMetaphone(value) for consonants", () => {
       it("should make --DGI into TJ", () => {
         assert.equal(doubleMetaphone("TDGI"), "TJ");
       });
-      it("should make --DGY into TJ", () => {
-        assert.equal(doubleMetaphone("TDGY"), "TJ");
-      });
       it("should make --DGA into --TKA", () => {
         assert.equal(doubleMetaphone("EDGAR"), "1TK0R");
       });

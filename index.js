@@ -168,7 +168,8 @@ function doubleMetaphone(value) {
             case 'A':
               if (CONSONANTS.test(next)
                 && nextnext === 'E'
-                && (characters[length - 3] || characters[length - 4])) {
+                && length > 2
+                && (index === length - 3 || index === length - 4 )) {
                 primary += 'A';
                 secondary += 'A';
                 index++;
@@ -221,7 +222,8 @@ function doubleMetaphone(value) {
                 index ++;
               } else if (CONSONANTS.test(next)
                 && nextnext === 'E'
-                && (characters[length - 3] || characters[length - 4])) {
+                && length > 2
+                && (index === length - 3 || index === length - 4 )) {
                 primary += 'E';
                 secondary += 'E';
                 index++;
@@ -282,7 +284,8 @@ function doubleMetaphone(value) {
                 index++;
               } else if (CONSONANTS.test(next)
                 && nextnext === 'E'
-                && (characters[length - 3] || characters[length - 4])) {
+                && length > 2
+                && (index === length - 3 || index === length - 4 )) {
                 primary += 'I';
                 secondary += 'I';
                 index++;
@@ -359,7 +362,8 @@ function doubleMetaphone(value) {
                 index += 2;
               } else if (CONSONANTS.test(next)
                 && nextnext === 'E'
-                && (characters[length - 3] || characters[length - 4])) {
+                && length > 2
+                && (index === length - 3 || index === length - 4 )) {
                 primary += 'O';
                 secondary += 'O';
                 index++;
@@ -404,7 +408,8 @@ function doubleMetaphone(value) {
                 index += 2;
               } else if (CONSONANTS.test(next)
                 && nextnext === 'E'
-                && (characters[length - 3] || characters[length - 4])) {
+                && length > 2
+                && (index === length - 3 || index === length - 4 )) {
                 primary += 'U';
                 secondary += 'U';
                 index++;
