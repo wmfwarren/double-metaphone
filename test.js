@@ -96,6 +96,10 @@ describe('doubleMetaphone(value) for Vowels', () => {
         assert.equal(doubleMetaphone("UTE"), 'UT');
       });
     });
+    it("should transform EAU's into EU's ", () => {
+      assert.equal(doubleMetaphone("EAU"), "U");
+      assert.equal(doubleMetaphone("BEAUT"), 'PUT');
+    });
     it("should transform EA's into E's ", () => {
       assert.equal(doubleMetaphone("TEA"), "TE");
       assert.equal(doubleMetaphone("EA"), 'E');
@@ -850,7 +854,7 @@ describe("doubleMetaphone(value) for consonants", () => {
     it("should make French AUX into O", () => {
       assert.equal(doubleMetaphone("AUXILIARY"), "0KS1LI0RE");
       assert.equal(doubleMetaphone("FAUX"), "FO");
-      assert.equal(doubleMetaphone("BREAUX"), "PR1O");
+      assert.equal(doubleMetaphone("BREAUX"), "PRO");
     });
     it("X transforms to KS", () => {
       assert.equal(doubleMetaphone("EXCITE"), "1KSIT");
@@ -901,20 +905,23 @@ describe("doubleMetaphone(value) for consonants", () => {
     it("should fail 9 'CADMIUM'", () => {
       assert.equal(doubleMetaphone("CADMIUM"), 1);
     });
-    it("should fail 10 'THE'", () => {
-      assert.equal(doubleMetaphone("THE"), 1);
+    it("should fail 10 'RHYTHMIC'", () => {
+      assert.equal(doubleMetaphone("RHYTHMIC"), 1);
     });
     it("should fail 11 'DAMN'", () => { ////////////Need a fix for MN
       assert.equal(doubleMetaphone("DAMN"), 1);
     });
-    it("should fail 12 'WE'", () => { ////////////Need a fix for MN
-      assert.equal(doubleMetaphone("WE"), 1);
+    it("should fail 12 'PHILANTHROPY'", () => { ////////////Need a fix for MN
+      assert.equal(doubleMetaphone("PHILANTHROPY"), 1);
     });
-    it("should fail 13 'TE'", () => { ////////////Need a fix for MN
-      assert.equal(doubleMetaphone("TE"), 1);
+    it("should fail 13 'SILLAGE'", () => { ////////////Need a fix for MN
+      assert.equal(doubleMetaphone("SILLAGE"), 1);
     });
-    it("should fail 14 'SE'", () => { ////////////Need a fix for MN
-      assert.equal(doubleMetaphone("SE"), 1);
+    it("should fail 14 'GORGEOUS'", () => { ////////////Need a fix for MN
+      assert.equal(doubleMetaphone("GORGEOUS"), 1);
+    });
+    it("should fail 15 'BEAUTIFUL'", () => { ////////////Need a fix for MN
+      assert.equal(doubleMetaphone("BEAUTIFUL"), 1);
     });
   });
 });// Main describe block
