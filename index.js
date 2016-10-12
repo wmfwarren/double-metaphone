@@ -229,6 +229,14 @@ function doubleMetaphone(value) {
                 primary += 'E';
                 secondary += 'E';
                 index++;
+              } else if (next === 'A' && nextnext === 'U' && characters[index + 3] === 'X') {
+                primary += 'U';
+                secondary += 'U';
+                index += 4;
+              } else if (next === 'A' && nextnext === 'U') {
+                primary += 'U';
+                secondary += 'U';
+                index += 3;
               } else if (next === 'A' && characters[last] !== 'X') {
                 primary += 'E';
                 secondary += 'E';
@@ -430,6 +438,13 @@ function doubleMetaphone(value) {
                 primary += 'E';
                 secondary += 'E';
                 index += 2;
+              } else if (CONSONANTS.test(next)
+                && nextnext === 'E'
+                && length > 2
+                && (index === length - 3 || index === length - 4 )) {
+                primary += 'I';
+                secondary += 'I';
+                index++;
               } else if (next === 'S' && nextnext === "L") {
                 primary += 'I';
                 secondary += 'I';
@@ -1616,7 +1631,10 @@ function doubleMetaphone(value) {
                  * French such as `breaux`.
                  */
 
-                if (
+               if (prev === 'U' && prevprev === 'A' && characters[index - 3] === 'E'){
+                 primary += '';
+                 secondary += '';
+               } else if (
                     index === last ||
                     (
                         /*
